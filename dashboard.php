@@ -148,13 +148,16 @@ $role     = $_SESSION['role'];            // admin | user
 
             <!-- IVAN-END-AREA -->
             <!-- DIMA-AREA -->
+      <div>Banan</div>
 
 
 
+          
 
-                <div>Banan</div>
 
-
+            <!-- test -->
+                <div>test</div>
+                <div>test2</div>
 
 
 
