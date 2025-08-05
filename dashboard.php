@@ -144,7 +144,7 @@ $role     = $_SESSION['role'];            // admin | user
 
 
 
-
+<h1>Dimka rabotaet</h2>
 
             <!-- IVAN-END-AREA -->
             <!-- DIMA-AREA -->
