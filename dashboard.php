@@ -152,6 +152,7 @@ $role     = $_SESSION['role'];            // admin | user
 
 
 
+                <div>Banan</div>
 
 
 
@@ -186,8 +187,7 @@ $role     = $_SESSION['role'];            // admin | user
 
 
 
-
-                <!-- DIMA-END-AREA -->
+        <!-- DIMA-END-AREA -->
             <div class="content__placeholder">
                 <p>Выберите комнату или создайте новую, чтобы начать работать с задачами.</p>
             </div>
