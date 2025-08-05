@@ -105,7 +105,89 @@ $role     = $_SESSION['role'];            // admin | user
 
         <!-- CONTENT-AREA -->
         <main class="content">
-            <!-- Тут JS підсуватиме канбан-дошку / список і т.д. -->
+         
+            <!-- IVAN-AREA -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- IVAN-END-AREA -->
+            <!-- DIMA-AREA -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- DIMA-END-AREA -->
             <div class="content__placeholder">
                 <p>Выберите комнату или создайте новую, чтобы начать работать с задачами.</p>
             </div>
