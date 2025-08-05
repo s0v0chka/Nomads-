@@ -67,7 +67,11 @@ $role     = $_SESSION['role'];            // admin | user
 
             <?php if ($role === 'admin'): ?>
                 <a class="menu__item" href="#"><i class="fas fa-users"></i><span>Пользователи</span></a>
+<<<<<<< HEAD
                 <a class="menu__item" href="#"><i class="fas fa-cog"></i><span>Settings3</span></a>
+=======
+                <a class="menu__item" href="#"><i class="fas fa-cog"></i><span>Settings2</span></a>
+>>>>>>> 13001f53ba80618aa9e601de0d1a0d5a0770582a
             <?php endif; ?>
         </nav>
 
