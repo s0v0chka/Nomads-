@@ -67,7 +67,7 @@ $role     = $_SESSION['role'];            // admin | user
 
             <?php if ($role === 'admin'): ?>
                 <a class="menu__item" href="#"><i class="fas fa-users"></i><span>Пользователи</span></a>
-                <a class="menu__item" href="#"><i class="fas fa-cog"></i><span>Settings</span></a>
+                <a class="menu__item" href="#"><i class="fas fa-cog"></i><span>Settings2</span></a>
             <?php endif; ?>
         </nav>
 
