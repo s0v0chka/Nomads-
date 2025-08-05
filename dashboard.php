@@ -140,27 +140,8 @@ $role     = $_SESSION['role'];            // admin | user
 
 
 
-
-
-
-
-<h1>Dimka rabotaet</h2>
-
             <!-- IVAN-END-AREA -->
             <!-- DIMA-AREA -->
-      <div>Banan</div>
-
-
-
-          
-
-
-            <!-- test -->
-                <div>test</div>
-                <div>test2</div>
-
-
-                 <div>test3</div>
 
 
 
