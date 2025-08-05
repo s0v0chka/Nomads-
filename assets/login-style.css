@@ -1,0 +1,106 @@
+/* ---------- ROOT ---------- */
+:root{
+    --bg1:#101728;
+    --bg2:#0d1b2a;
+    --pulse:#008cff;
+    --neon1:#2afadf;
+    --neon2:#4c83ff;
+    --card-bg:rgba(255,255,255,0.06);
+    --glass:blur(18px);
+    --border:rgba(255,255,255,.25);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+html,body{height:100%;overflow:hidden;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;}
+
+/* ---------- STARFIELD CANVAS ---------- */
+#stars{position:fixed;inset:0;z-index: 0;}
+.radial-overlay{
+    position:fixed;inset:0;pointer-events:none;z-index:-2;
+    background:radial-gradient(circle at center,#ffffff0d 0%,transparent 60%);
+    animation:pulseBg 10s ease-in-out infinite alternate;
+}
+@keyframes pulseBg{to{transform:scale(1.3);}}
+
+/* ---------- CARD ---------- */
+.login-card{
+    width:min(400px,90vw);
+    padding:3.2rem 2.6rem;
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    border-radius:1.5rem;
+    backdrop-filter:var(--glass);
+    position:relative;z-index:5;
+   top:50%;left:50%;transform:translate(-50%,-45%);
+    box-shadow:0 25px 45px rgba(0,0,0,.55);
+    opacity:0;                          /* start hidden */
+    animation:cardIn .9s .3s forwards;   /* fade + scale in */
+}
+
+/* ÑÑ‚Ð°Ñ‚Ð¸Ñ‡Ð½Ð¸Ð¹ Ð½ÐµÐ¾Ð½Ð¾Ð²Ð¸Ð¹ Ð±Ð¾Ñ€Ð´ÐµÑ€ */
+.login-card::before{
+    content:"";position:absolute;inset:-2px;z-index:-1;border-radius:inherit;
+    background:conic-gradient(var(--neon1),var(--neon2),var(--neon1));
+    filter:blur(6px);opacity:.8;
+}
+
+/* POP-IN */
+@keyframes cardIn{
+    from{opacity:0;transform:translate(-50%,-45%) scale(.92);}
+    to  {opacity:1;transform:translate(-50%,-50%) scale(1);}
+}
+
+/* ---------- FORM ---------- */
+.title{font-weight:600;font-size:1.8rem;text-align:center;margin-bottom:2.2rem;}
+.title span{color:var(--neon1);}
+.field{position:relative;margin-bottom:1.8rem;}
+.field input{
+    width:100%;padding:.95rem .9rem;
+    background:transparent;border:2px solid rgba(255,255,255,.25);
+    border-radius:8px;color:#fff;font-size:1rem;
+    transition:border-color .3s;
+}
+.field label{
+    position:absolute;left:.95rem;top:50%;transform:translateY(-50%);
+    color:#9ab0d8;font-size:.9rem;pointer-events:none;
+    transition:top .25s,font-size .25s,color .25s;
+}
+.field input:focus{outline:none;border-color:var(--neon2);}
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label{
+    top: -11px;
+    font-size:.75rem;
+    left: 0;
+    color:var(--neon1);
+}
+
+/* ---------- BUTTON ---------- */
+.btn-neon{
+    width:100%;
+    padding:.95rem 0;
+    background: linear-gradient(135deg, #f7fffb, #a7deff);
+    border:none;
+    border-radius:50px;
+    color: #3c86cf;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    box-shadow: 0 4px 18px rgb(22 29 35 / 50%);
+    transition:transform .2s,box-shadow .2s;
+}
+.btn-neon .glow{
+    position:absolute;
+    inset:0;
+    background:inherit;
+    filter:blur(18px);
+    opacity: 0.1;
+    transition:opacity .2s;
+}
+.btn-neon:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,140,255,.65);}
+.btn-neon:hover .glow{opacity:0.1;}
+.btn-neon:active{transform:translateY(0);}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:420px){.title{font-size:1.5rem;padding-bottom:.5rem;}}

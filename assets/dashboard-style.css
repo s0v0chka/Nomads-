@@ -1,0 +1,212 @@
+/* ===============  ROOT  ================= */
+:root{
+    --bg1:#101728;
+    --bg2:#0d1b2a;
+    --glass:blur(20px);
+    --sidebar-w:260px;               /* ширина відкритого */
+    --sidebar-w-collapsed:72px;      /* ширина згорнутого */
+    --neon1:#2afadf;
+    --neon2:#4c83ff;
+    --border:rgba(255,255,255,.15);
+    --txt:#d7e9ff;
+    --txt-dim:#9ab0d8;
+    --white:#fff;
+    --transition:.25s ease;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--white);overflow:hidden;font-family:'Inter',sans-serif;}
+
+/* ===============  BACKGROUND FX  ================= */
+#stars{position:fixed;inset:0;opacity: 0.24;z-index: 0;}
+.radial-overlay{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background:radial-gradient(circle at center,#ffffff0d 0%,transparent 65%);
+    animation:pulseBg 12s ease-in-out infinite alternate;
+}
+@keyframes pulseBg{to{transform:scale(1.3);}}
+
+/* ===============  SIDEBAR  ================= */
+#sidebar{
+    position:fixed;left:0;top:0;height:100%;width:var(--sidebar-w);
+    background:rgba(255,255,255,.05);
+    backdrop-filter:var(--glass);
+    border-right:1px solid var(--border);
+    display:flex;flex-direction:column;
+    transition:width var(--transition);
+    z-index:10;
+}
+
+/* -- collapsed modifier (буде додано JS-ом) -- */
+#sidebar.collapsed{width:var(--sidebar-w-collapsed);}
+
+/* ─── CORRECTION: neat collapsed sidebar ─────────────────── */
+#sidebar.collapsed .menu{               /* прибираємо зовн. відступи */
+    padding: .5rem 0;
+    align-items: center;                /* центруємо всю колонку */
+}
+#sidebar.collapsed .menu__item,
+#sidebar.collapsed .menu__collapse{
+    justify-content: center;            /* іконка строго по центру */
+    padding: .75rem;                  /* симетричний внутр. відступ */
+    gap: 0;                             /* прибираємо проміжок під текст */
+    border-width: 0;                    /* тонка рамка не потрібна */
+}
+#sidebar.collapsed .menu__item i,
+#sidebar.collapsed .menu__collapse i{
+    margin: 0;                          /* нульовий відступ нав-коло іконки */
+}
+
+/* ховаємо підменю повністю у згорнутому стані */
+#sidebar.collapsed .submenu{display:none!important;max-height:0!important;}
+
+/* аватар і кнопка виходу рівно під іконками */
+#sidebar.collapsed .sidebar__profile{
+    flex-direction: column;
+    gap: .7rem;
+    padding: 1.2rem 0;
+}
+#sidebar.collapsed .logout{
+    margin:0;
+    width:42px;height:42px;             /* коло того ж діаметра */
+    display:flex;align-items:center;justify-content:center;
+}
+
+
+#sidebar.collapsed .logo span,
+#sidebar.collapsed .menu__item span,
+#sidebar.collapsed .menu__collapse span,
+#sidebar.collapsed .sidebar__profile .info{display:none;}
+#sidebar.collapsed .sidebar__top{justify-content:center;}
+#sidebar.collapsed .chevron{display:none;}
+
+/* топ блоку */
+.sidebar__top{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.2rem 1rem 1.2rem 1.3rem;
+}
+.logo{font-size:1.5rem;font-weight:700;letter-spacing:.4px;}
+.logo-sub {color:var(--neon1);}
+.icon-btn{
+    width:38px;height:38px;border:none;border-radius:50%;
+    background:rgba(255,255,255,.08);color:var(--white);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:1rem;transition:background .2s;
+}
+.icon-btn:hover{background:rgba(255,255,255,.12);}
+
+/* ---------- NAV MENU ---------- */
+.menu{display:flex;flex-direction:column;gap:.5rem;padding:0 1rem;}
+.menu__item,
+.menu__collapse{
+    display:flex;align-items:center;gap:.9rem;
+    padding:.75rem 1rem;border-radius:12px;
+    color:var(--txt);font-size:.95rem;
+    background:transparent;border:2px solid transparent;
+    cursor:pointer;text-decoration:none;transition:background .2s,color .2s;
+}
+.menu__item:hover,
+.menu__collapse:hover{background:rgba(255,255,255,.07);}
+.menu__item.active{background:linear-gradient(135deg,var(--neon1),var(--neon2));color:var(--white);}
+.menu__item i,
+.menu__collapse i{min-width:18px;text-align:center;}
+
+/* collapsible section */
+.menu__section{display:flex;flex-direction:column;gap:.4rem;}
+.chevron{margin-left:auto;transition:transform .3s;}
+.menu__collapse.open .chevron{transform:rotate(180deg);}
+
+.submenu{
+    list-style:none;padding-left:2.1rem;display:none;flex-direction:column;gap:.3rem;
+    overflow:hidden;max-height:0;transition:max-height .35s ease;
+}
+.submenu.open{display:flex;max-height:400px;}
+.submenu li a{
+    font-size:.88rem;color:var(--txt-dim);text-decoration:none;
+    padding:.4rem .6rem;border-radius:6px;display:block;
+    transition:background .2s,color .2s;
+}
+.submenu li a:hover{background:rgba(255,255,255,.07);color:var(--white);}
+
+/* ---------- PROFILE BLOCK ---------- */
+.sidebar__profile{
+    margin-top:auto;padding:1.6rem 1rem;display:flex;align-items:center;gap:.9rem;
+}
+.avatar{
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,var(--neon1),var(--neon2));
+    display:flex;align-items:center;justify-content:center;
+    font-size:1rem;color:var(--white);
+}
+.info .name{font-weight:600;}
+.info .role{font-size:.8rem;color:var(--txt-dim);}
+.logout{margin-left:auto;}
+
+/* ===============  MAIN WRAP  ================= */
+#main{
+    margin-left:var(--sidebar-w);height:100%;transition:margin-left var(--transition);
+    display:flex;flex-direction:column;
+}
+#sidebar.collapsed ~ #main{margin-left:var(--sidebar-w-collapsed);}
+
+/* ---------- TOPBAR ---------- */
+.topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1rem 2rem;border-bottom:1px solid var(--border);
+    backdrop-filter:var(--glass);
+}
+.topbar__right {display: flex; gap: 5px;}
+.view-switch{display:flex;gap:.8rem;}
+.view-btn{
+    display:flex;align-items:center;gap:.6rem;
+    padding:.55rem 1.1rem;border:none;border-radius:12px;
+    background:rgba(255,255,255,.06);color:var(--txt);cursor:pointer;
+    font-size:.9rem;transition:background .2s;
+}
+.view-btn:hover{background:rgba(255,255,255,.1);}
+.view-btn.active{
+    background:linear-gradient(135deg,var(--neon1),var(--neon2));color:var(--white);
+}
+
+/* ---------- CONTENT ---------- */
+.content{
+    flex:1;overflow:auto;padding:2rem 2.5vw;
+    animation:fadeIn .6s ease;
+}
+
+
+
+
+/* основний стиль логотипу */
+.logo-text { transition: all var(--transition); color: #fff; }
+.logo-sub { color: var(--neon1); transition: all var(--transition); }
+
+/* коли меню згорнуте → показується "T" */
+#sidebar.collapsed .logo-text::before {
+    content: "T";
+}
+#sidebar.collapsed .logo-text {
+    font-weight: 700;
+}
+
+/* повністю ховаємо старе слово "Task" і "Manager" */
+#sidebar.collapsed .logo-text {
+    font-size: 1.4rem;
+    color: var(--white);
+}
+#sidebar.collapsed .logo-sub {
+    display: none;
+}
+
+
+
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:none;}}
+.content__placeholder{
+    text-align:center;color:var(--txt-dim);font-size:1.15rem;padding-top:8vh;
+}
+
+/* ===============  MEDIA  ================= */
+@media(max-width:768px){
+    :root{--sidebar-w:220px;}
+    .topbar{padding:1rem 1.4rem;}
+}
