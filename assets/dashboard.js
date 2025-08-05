@@ -93,46 +93,6 @@ document.querySelectorAll('.menu__item').forEach(item => {
 /* =========================================================
    LOAD TASKS
    ========================================================= */
-function loadTasks(roomId) {
-    fetch('get-tasks.php?room=' + roomId)
-        .then(res => res.json())
-        .then(data => {
-            const content = document.querySelector('.content');
-            content.innerHTML = ''; // очищаємо
-
-            if (!Array.isArray(data)) {
-                content.innerHTML = '<p class="content__placeholder">Помилка завантаження задач.</p>';
-                return;
-            }
-
-            if (data.length === 0) {
-                content.innerHTML = '<p class="content__placeholder">У цій кімнаті ще немає задач.</p>';
-                return;
-            }
-
-            const list = document.createElement('ul');
-            list.className = 'task-list';
-
-            data.forEach(task => {
-                const li = document.createElement('li');
-                li.className = 'task-item';
-                li.innerHTML = `
-                    <div class="task-header">
-                        <span class="task-title">${task.title}</span>
-                        <span class="task-status">${task.status}</span>
-                    </div>
-                    <div class="task-desc">${task.description || ''}</div>
-                `;
-                list.appendChild(li);
-            });
-
-            content.appendChild(list);
-        })
-        .catch(err => {
-            console.error('Помилка:', err);
-            document.querySelector('.content').innerHTML = '<p class="content__placeholder">Помилка при завантаженні.</p>';
-        });
-}
 
 
 
