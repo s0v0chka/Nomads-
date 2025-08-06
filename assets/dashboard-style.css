@@ -14,10 +14,13 @@
     --transition:.25s ease;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--white);overflow:hidden;font-family:'Inter',sans-serif;}
+html {
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--white);
+}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;}
 
 /* ===============  BACKGROUND FX  ================= */
-#stars{position:fixed;inset:0;opacity: 0.24;z-index: 0;}
+#stars{position:fixed;inset:0;opacity: 0.24;z-index: -1;}
 .radial-overlay{
     position:fixed;inset:0;z-index:-2;pointer-events:none;
     background:radial-gradient(circle at center,#ffffff0d 0%,transparent 65%);
@@ -324,7 +327,7 @@ html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));c
 .color-picker-wrap {
     position: absolute;
     right: 43px;
-    top: 110px;
+    top: 97px;
     display: inline-block;
 }
 

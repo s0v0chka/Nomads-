@@ -21,6 +21,7 @@ $role     = $_SESSION['role'];            // admin | user
 
     <!-- Styles (додамо пізніше) -->
     <link rel="stylesheet" href="assets/dashboard-style.css">
+     <link rel="stylesheet" href="assets/task-creator.css">
 </head>
 <body>
 
@@ -103,6 +104,11 @@ foreach ($rooms as $room) {
         <!-- TOPBAR -->
         <header class="topbar">
             <div class="topbar__left">
+
+                    <button id="openTaskCreatorBtn" class="create-task-btn">
+                        <i class="fas fa-plus"></i> Добавить задачу
+                    </button>
+
                 <!-- Переключатель видов задач -->
                 <div class="view-switch" id="viewSwitch">
                     <button class="view-btn active" data-view="kanban"><i class="fas fa-columns"></i><span>Канбан</span></button>
@@ -214,18 +220,13 @@ foreach ($rooms as $room) {
 
 
 
+<div id="taskCreatorWrapper"></div>
 
 
 
 
 
 
-
-
-
-
-
-<div>asdsadasdasd</div>
 
 
 
@@ -273,5 +274,14 @@ foreach ($rooms as $room) {
 
     <!-- Scripts (додамо потім) -->
     <script src="assets/dashboard.js"></script>
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/rangePlugin.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+
+<script src="assets/task-creator.js"></script>
 </body>
 </html>
