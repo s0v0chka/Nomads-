@@ -44,11 +44,23 @@ sidebarToggle.addEventListener('click', () => {
    COLLAPSIBLE "Комнаты"
    ========================================================= */
 document.querySelectorAll('.menu__collapse').forEach(btn => {
+    const targetId = btn.dataset.target;
+    const submenu = document.getElementById(targetId);
+
+    // при загрузке страницы — восстановить состояние
+    const savedState = localStorage.getItem(`menu_${targetId}`);
+    if (savedState === 'open') {
+        submenu.classList.add('open');
+        btn.classList.add('open');
+    }
+
     btn.addEventListener('click', () => {
-        const targetId = btn.dataset.target;
-        const submenu  = document.getElementById(targetId);
         submenu.classList.toggle('open');
         btn.classList.toggle('open');
+
+        // сохранить новое состояние
+        const isOpen = submenu.classList.contains('open');
+        localStorage.setItem(`menu_${targetId}`, isOpen ? 'open' : 'closed');
     });
 });
 
@@ -94,25 +106,136 @@ document.querySelectorAll('.menu__item').forEach(item => {
    LOAD TASKS
    ========================================================= */
 
+document.querySelector('.baseadd').addEventListener('click', () => {
+    document.getElementById('addRoomModal').style.display = 'flex';
+});
+
+document.getElementById('saveRoomBtn').addEventListener('click', () => {
+    const name = document.getElementById('newRoomName').value.trim();
+    const color = document.querySelector('input[name="color"]').value;
+
+    if (!name) {
+        alert('Введите имя комнаты');
+        return;
+    }
+
+    fetch('add-room.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `name=${encodeURIComponent(name)}&color=${encodeURIComponent(color)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            location.reload(); // или можно динамически перерисовать список
+        } else {
+            alert(data.message || 'Ошибка');
+        }
+    });
+});
+
+document.querySelector('.modal-close').addEventListener('click', () => {
+    document.getElementById('addRoomModal').style.display = 'none';
+});
+const colorInput = document.getElementById('roomColor');
+const colorDisplay = document.getElementById('colorDisplay');
+
+colorInput.addEventListener('input', () => {
+    colorDisplay.style.backgroundColor = colorInput.value;
+});
 
 
-fetch('get-rooms.php')
-  .then(res => res.json())
-  .then(data => {
-    const ul = document.getElementById('roomsList');
-    ul.innerHTML = '';
+// Закриття меню по кліку поза ним
+document.addEventListener('click', function (e) {
+    document.querySelectorAll('.room-menu').forEach(menu => menu.style.display = 'none');
+});
 
-    data.forEach(room => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = '#';
-        a.textContent = room.name;
-        a.addEventListener('click', e => {
-            e.preventDefault();
-            loadTasks(room.id);
-        });
+// Відкриття меню по кнопці
+document.querySelectorAll('.room-options').forEach(button => {
+    button.addEventListener('click', function (e) {
+        e.stopPropagation(); // щоб не закрилось одразу
+        const menu = this.nextElementSibling;
+        document.querySelectorAll('.room-menu').forEach(m => m.style.display = 'none');
+        menu.style.display = 'block';
+    });
+});
 
-        li.appendChild(a);
-        ul.appendChild(li);
+// Редагування
+document.querySelectorAll('.edit-room').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const li = this.closest('.room-item');
+        const roomId = li.dataset.roomId;
+        const roomName = li.dataset.roomName;
+        const roomColor = li.dataset.roomColor;
+
+        openEditRoomModal(roomId, roomName, roomColor);
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.delete-room').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const li = btn.closest('.room-item');
+      const roomId = li.getAttribute('data-room-id');
+      openDeleteModal(roomId);
     });
   });
+});
+// Видалення
+function openDeleteModal(roomId) {
+  document.getElementById('deleteRoomId').value = roomId;
+  document.getElementById('confirmDeleteModal').style.display = 'flex';
+}
+
+function closeDeleteModal() {
+  document.getElementById('confirmDeleteModal').style.display = 'none';
+}
+
+function confirmRoomDeletion() {
+  const roomId = document.getElementById('deleteRoomId').value;
+
+  fetch('delete-room.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'room_id=' + encodeURIComponent(roomId)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      location.reload(); 
+    } else {
+      alert(data.message || 'Ошибка удаления');
+    }
+  });
+}
+
+function openEditRoomModal(roomId, name, color) {
+  document.getElementById('editRoomId').value = roomId;
+  document.getElementById('editRoomName').value = name;
+  document.getElementById('editRoomColor').value = color;
+  document.getElementById('editColorDisplay').style.backgroundColor = color;
+  document.getElementById('editRoomModal').style.display = 'flex';
+}
+document.getElementById('editRoomColor').addEventListener('input', function () {
+  document.getElementById('editColorDisplay').style.backgroundColor = this.value;
+});
+
+
+document.getElementById('saveEditBtn').addEventListener('click', () => {
+  const id = document.getElementById('editRoomId').value;
+  const name = document.getElementById('editRoomName').value.trim();
+  const color = document.getElementById('editRoomColor').value;
+
+  fetch('update-room.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: `room_id=${id}&name=${encodeURIComponent(name)}&color=${encodeURIComponent(color)}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      location.reload(); // або вручну оновити DOM
+    } else {
+      alert(data.message || 'Ошибка редактирования');
+    }
+  });
+});
