@@ -180,6 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+
+
+
 // Видалення
 function openDeleteModal(roomId) {
   document.getElementById('deleteRoomId').value = roomId;
@@ -214,10 +218,27 @@ function openEditRoomModal(roomId, name, color) {
   document.getElementById('editRoomColor').value = color;
   document.getElementById('editColorDisplay').style.backgroundColor = color;
   document.getElementById('editRoomModal').style.display = 'flex';
+
+  // Загружаем пользователей комнаты
+  fetch(`get-room-users.php?room_id=${roomId}`)
+    .then(res => res.json())
+    .then(data => {
+      const ul = document.getElementById('roomUsersList');
+      ul.innerHTML = '';
+
+      data.forEach(user => {
+        const li = document.createElement('li');
+        li.innerHTML = ` <div class="user-bloc">
+  <img src="assets/avatars/${user.avatar || 'user.png'}" class="avatar-suggestion">
+  <span>${user.username}</span></div>
+`;
+
+        li.classList.add('user-item');
+        li.innerHTML += ` <button class="remove-user-btn" data-user-id="${user.id}">&times;</button>`;
+        ul.appendChild(li);
+      });
+    });
 }
-document.getElementById('editRoomColor').addEventListener('input', function () {
-  document.getElementById('editColorDisplay').style.backgroundColor = this.value;
-});
 
 
 document.getElementById('saveEditBtn').addEventListener('click', () => {
@@ -238,4 +259,70 @@ document.getElementById('saveEditBtn').addEventListener('click', () => {
       alert(data.message || 'Ошибка редактирования');
     }
   });
+});
+
+document.getElementById('addUserInput').addEventListener('input', function () {
+  const query = this.value.trim();
+  const suggestions = document.getElementById('userSuggestions');
+  const roomId = document.getElementById('editRoomId').value;
+
+  if (query.length < 2) return suggestions.innerHTML = '';
+
+  fetch(`search-users.php?q=${encodeURIComponent(query)}&room_id=${roomId}`)
+    .then(res => res.json())
+    .then(data => {
+      suggestions.innerHTML = '';
+      data.forEach(user => {
+        const li = document.createElement('li');
+        li.classList.add('suggestion-item');
+        li.innerHTML = `
+          <img src="assets/avatars/${user.avatar || 'user.png'}" class="avatar-suggestion">
+          <span>${user.username}</span>
+        `;
+
+        li.addEventListener('click', () => {
+          fetch('add-user-to-room.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `room_id=${roomId}&user_id=${user.id}`
+          })
+          .then(res => res.json())
+          .then(resp => {
+            if (resp.success) {
+              openEditRoomModal(
+                roomId,
+                document.getElementById('editRoomName').value,
+                document.getElementById('editRoomColor').value
+              );
+              suggestions.innerHTML = '';
+              document.getElementById('addUserInput').value = '';
+            }
+          });
+        });
+
+        suggestions.appendChild(li);
+      });
+    });
+});
+
+
+function renderRoomUsers(users) {
+  const container = document.getElementById('roomUsersList');
+  container.innerHTML = '';
+
+  users.forEach(user => {
+    const tag = document.createElement('div');
+    tag.classList.add('user-tag');
+    tag.textContent = user.username;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.innerHTML = '&times;';
+    removeBtn.onclick = () => removeUserFromRoom(user.id);
+
+    tag.appendChild(removeBtn);
+    container.appendChild(tag);
+  });
+}
+document.getElementById('editRoomColor').addEventListener('input', function () {
+  document.getElementById('editColorDisplay').style.backgroundColor = this.value;
 });

@@ -7,7 +7,7 @@
     --sidebar-w-collapsed:72px;      /* ширина згорнутого */
     --neon1:#2afadf;
     --neon2:#4c83ff;
-    --border:rgba(255,255,255,.15);
+    --border:#ffffff12;
     --txt:#d7e9ff;
     --txt-dim:#9ab0d8;
     --white:#fff;
@@ -236,6 +236,7 @@ html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));c
     max-width: 420px;
     font-size: .88rem;
     width: 90%;
+    text-align: center;
     animation: scaleIn 0.3s ease;
     color: var(--white);
 }
@@ -246,9 +247,9 @@ html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));c
 }
 
 .modal-title {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     color: var(--white);
     text-align: center;
 }
@@ -268,9 +269,9 @@ html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));c
 
 .modal-group input[type="text"],
 .modal-group input[type="color"] {
-    padding: 12px 14px;
+    padding: 10px 14px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgb(255 255 255 / 2%);
     border: 1px solid var(--border);
     color: var(--white);
     font-size: 0.94rem;
@@ -291,10 +292,9 @@ html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));c
     border-radius: 10px;
     background: linear-gradient(135deg, var(--neon1), var(--neon2));
     color: var(--white);
-    font-size: .88rem;
+    font-size: .78rem;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 0 12px rgba(42, 250, 223, 0.35);
     transition: transform 0.2s ease, box-shadow 0.2s;
 }
 
@@ -322,15 +322,17 @@ html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));c
 
 
 .color-picker-wrap {
-    position: relative;
+    position: absolute;
+    right: 43px;
+    top: 110px;
     display: inline-block;
 }
 
 .color-display {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 2px solid var(--neon1);
+    width: 25px;
+    height: 25px;
+    border-radius: 22%;
+    border: 1px solid var(--neon1);
     cursor: pointer;
     background-color: #ff3b3b;
     transition: transform 0.2s ease;
@@ -345,10 +347,10 @@ html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));c
 /* Скрываем нативный инпут */
 .color-picker-wrap input[type="color"] {
     position: absolute;
-    left: 0;
+    right: 0;
     top: 0;
-    width: 38px;
-    height: 38px;
+    width: 25px;
+    height: 25px;
     opacity: 0;
     cursor: pointer;
 }
@@ -423,4 +425,133 @@ html,body{height:100%;background:linear-gradient(135deg,var(--bg1),var(--bg2));c
 @media(max-width:768px){
     :root{--sidebar-w:220px;}
     .topbar{padding:1rem 1.4rem;}
+}
+
+
+.user-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: auto;
+    height: 100px;
+    margin-top: 10px;
+}
+
+.user-tag {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px 10px 4px 12px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-tag button {
+    background: none;
+    border: none;
+    color: #f66;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.user-input-wrap {
+    position: relative;
+}
+
+#addUserInput {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgb(255 255 255 / 0%);
+    color: var(--white);
+    font-size: 0.95rem;
+    margin-top: 6px;
+    outline: none;
+}
+
+.suggestions-list {
+    position: absolute;
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-top: -7px;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.suggestions-list li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: .88rem;
+    color: var(--white);
+    transition: background 0.2s;
+}
+
+.suggestions-list li:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+.avatar-suggestion {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: linear-gradient(135deg, var(--neon1), var(--neon2));
+  margin-right: 0px;
+  padding: 2px;
+  vertical-align: middle;
+}
+#userSuggestions li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+#userSuggestions li:hover {
+  background: rgba(255,255,255,0.05);
+}
+.user-tags li {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+
+}
+
+.remove-user-btn {
+  background: transparent;
+  color: #417ba9;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  width: 24px;
+  height: 24px;
+  line-height: 22px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-left: 8px;
+}
+
+.remove-user-btn:hover {
+  background-color: rgba(255, 76, 76, 0.15);
+  color: #ff1f1f;
+}
+
+.remove-user-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 76, 76, 0.4);
+}
+.user-item {
+    display: flex;
+    justify-content: space-between;
 }

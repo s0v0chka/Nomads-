@@ -152,20 +152,40 @@ foreach ($rooms as $room) {
     <button class="modal-close" title="Закрыть" onclick="document.getElementById('editRoomModal').style.display='none'">&times;</button>
     <h3 class="modal-title">Редактирование комнаты</h3>
 
+    <div>
     <div class="modal-group">
       <label for="editRoomName">Название:</label>
       <input type="text" id="editRoomName" placeholder="Введите новое название комнаты">
-    </div>
 
-    <div class="modal-group">
-      <label>Цвет комнаты:</label>
+              
+
       <div class="color-picker-wrap">
         <div id="editColorDisplay" class="color-display"></div>
         <input type="color" id="editRoomColor" name="color" value="#ff3b3b">
       </div>
+
+
     </div>
 
+    
+            </div>
     <input type="hidden" id="editRoomId">
+
+<div class="modal-group">
+  <label>Учасники:</label>
+  <div id="roomUsersList" class="user-tags"></div>
+</div>
+
+<div class="modal-group">
+  <label for="addUserInput">Добавить пользователя:</label>
+  <div class="user-input-wrap">
+    <input type="text" id="addUserInput" placeholder="Введите имя пользователя">
+    <ul id="userSuggestions" class="suggestions-list"></ul>
+  </div>
+</div>
+
+
+
 
     <button id="saveEditBtn" class="modal-submit">Сохранить</button>
   </div>
