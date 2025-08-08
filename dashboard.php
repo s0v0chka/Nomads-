@@ -344,10 +344,13 @@ foreach ($rooms as $room) {
 
             <section class="usr_stngs_section" id="stngs_sect">
                 <h3>Налаштування</h3>
-                <form class="usr_stngs_form" id="setform_id">
+                <div class="ava_cont">
+                    <img id="avatarPreview" src="" class="ava" alt="">
+                </div>
+                <form class="usr_stngs_form" enctype="multipart/form-data" id="setform_id">
                     <div class="usr_stngs_field">
                         <label for="avatar">Avatar</label>
-                        <input type="text" id="avatar" name="avatar" class="usr_stngs_input"  />
+                        <input type="file" id="avatar" name="avatar_file" class="usr_stngs_input"  />
                     </div>
                     <div class="usr_stngs_field">
                         <label for="true_name">True Name</label>
