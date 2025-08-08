@@ -1,12 +1,8 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-$username = $_SESSION['username'];
-$role     = $_SESSION['role'];            // admin | user
+require_once 'authcheck.php';
+
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -18,7 +14,7 @@ $role     = $_SESSION['role'];            // admin | user
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Styles (додамо пізніше) -->
     <link rel="stylesheet" href="assets/dashboard-style.css">
 </head>
@@ -66,7 +62,7 @@ $role     = $_SESSION['role'];            // admin | user
             </div>
 
             <?php if ($role === 'admin'): ?>
-                <a class="menu__item" href="#"><i class="fas fa-users"></i><span>Пользователи</span></a>
+                <a class="menu__item " id=menusers href="#users_manager"><i class="fas fa-users"></i><span>Пользователи</span></a>
                 <a class="menu__item" href="#"><i class="fas fa-cog"></i><span>Settings3</span></a>
             <?php endif; ?>
         </nav>
@@ -103,6 +99,38 @@ $role     = $_SESSION['role'];            // admin | user
             </div>
         </header>
 
+                 <!-- Модальне вікно -->
+    <div id="editUserModal" class="moduser_modal">
+        <div class="moduser_modal-content">
+            <button id="closeModal" class="moduser_close-button">×</button>
+            <h3 class="moduser_title">Редагувати користувача</h3>
+
+            <input type="text" id="editUsername" class="moduser_input" placeholder="Логін" />
+
+            <select id="editRole" class="moduser_select">
+            <option value="">Виберіть роль</option>
+            <option value="user">Користувач</option>
+            <option value="admin">Адмін</option>
+            </select>
+
+            <input type="password" id="editPassword" class="moduser_input" placeholder="Новий пароль (необов'язково)" />
+
+            <div class="moduser_modal-buttons">
+            <button id="saveUserBtn" class="moduser_btn moduser_save">Зберегти</button>
+            <button id="cancelUserBtn" class="moduser_btn moduser_cancel">Скасувати</button>
+            </div>
+        </div>
+    </div>
+
+
+        <div class="trbls_dv">
+                <div id="createUserMessage" class="createUserMessageclass"></div>
+        </div>        
+
+        
+
+
+
         <!-- CONTENT-AREA -->
         <main class="content">
          
@@ -130,7 +158,6 @@ $role     = $_SESSION['role'];            // admin | user
 
 
 
-<div>asdsadasdasd</div>
 
 
 
@@ -145,21 +172,78 @@ $role     = $_SESSION['role'];            // admin | user
             <!-- IVAN-END-AREA -->
             <!-- DIMA-AREA -->
 
+               
+
+<div style="z-index: 66; position: relative;" class="users-management" id="users_manager">
+    <!-- Форма додавання користувача -->
+    <form id="createUserForm" method="POST">
+    <div class="form-group">
+        <label>Логін:</label>
+        <input type="text" name="username" required>
+    </div>
+
+    <div class="form-group">
+        <label>Пароль:</label>
+        <input type="password" name="password" required>
+    </div>
+
+    <div class="form-group">
+        <label>Роль:</label>
+        <select name="role" required>
+            <option value="user">Користувач</option>
+            <option value="admin">Адміністратор</option>
+        </select>
+    </div>
+
+    
+
+    <button type="submit" name="create_user" class="btn btn-primary">Додати користувача</button>
+</form>
+
+
+
+
+    
+
+
+    
+
+
+
+    <!-- Список користувачів -->
+    <div class="users-list">
+        <h3>Список користувачів</h3>
+        <table id="users_table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Логін</th>
+                    <th>Роль</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Користувачі будуть додаватися сюди через JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 
 
 
+<script>
+
+
+</script>
 
 
 
 
 
-
-
-
-
-
+<link rel="stylesheet" href="dstyle.css">
+<script src="dscript.js"></script>
 
 
 

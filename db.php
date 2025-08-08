@@ -1,4 +1,5 @@
 <?php
+
 $host = 'localhost';
 $db = 'task_manager';
 $user = 'root';
