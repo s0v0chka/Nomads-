@@ -347,7 +347,7 @@ foreach ($rooms as $room) {
                 <form class="usr_stngs_form" id="setform_id">
                     <div class="usr_stngs_field">
                         <label for="avatar">Avatar</label>
-                        <input type="text" id="avatar" name="avatar" class="usr_stngs_input"  />
+                        <input type="file" id="avatar" name="avatar" class="usr_stngs_input"  />
                     </div>
                     <div class="usr_stngs_field">
                         <label for="true_name">True Name</label>
