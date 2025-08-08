@@ -1,0 +1,336 @@
+/* =============== USERS MANAGEMENT SECTION =============== */
+.users-management {
+    display: none;
+    gap: 2rem;
+    width: 100%;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: var(--glass);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    animation: fadeIn 0.6s ease;
+    margin-bottom: 2rem;
+}
+
+.create-user-form {
+    flex: 1;
+    max-width: 400px;
+    padding: 1.5rem;
+    background: rgba(16, 23, 40, 0.6);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.users-list {
+    flex: 2;
+    padding: 1.5rem;
+    background: rgba(16, 23, 40, 0.6);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+}
+
+
+.createUserMessageclass{
+    visibility: visible;
+    position: absolute;
+    z-index: 999;
+    bottom: 0;
+}
+
+.trbls_dv{
+    display: flex;
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    
+    justify-content: center;
+    align-items: center;
+    box-sizing: unset;
+}
+
+
+
+
+
+
+
+
+.moduser_modal {
+    display: none;
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    background: rgb(0 0 0 / 85%);
+    justify-content: center;
+    align-items: center;
+    box-sizing: unset;
+}
+
+.moduser_modal-content {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  width: 320px;
+  animation: fadeIn 0.3s ease-in-out;
+  color: var(--txt);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.moduser_title {
+  text-align: center;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.moduser_input,
+.moduser_select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  color: var(--txt);
+  font-size: 14px;
+  outline: none;
+  transition: background var(--transition);
+}
+
+.moduser_input:focus,
+.moduser_select:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--neon1);
+}
+
+.moduser_modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.moduser_btn {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background var(--transition);
+}
+
+.moduser_save {
+  background: linear-gradient(135deg, var(--neon1), var(--neon2));
+  color: var(--white);
+}
+
+.moduser_save:hover {
+  opacity: 0.9;
+}
+
+.moduser_cancel {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--txt-dim);
+}
+
+.moduser_cancel:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.moduser_close-button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.create-user-form h3,
+.users-list h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--neon1);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--txt-dim);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--txt);
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--neon1);
+}
+
+.btn {
+    padding: 0.55rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--neon1), var(--neon2));
+    color: #141d2d;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(42, 250, 223, 0.2);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--txt);
+}
+
+.btn-danger {
+    background: rgba(255, 88, 88, 0.2);
+    color: #ff5858;
+}
+
+.btn-success {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+}
+
+table th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--neon1);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--txt);
+    font-size: 0.95rem;
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+table tr:hover td {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.alert {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.alert-danger {
+    background: rgba(255, 88, 88, 0.15);
+    color: #ff5858;
+    border: 1px solid rgba(255, 88, 88, 0.3);
+}
+
+.alert-success {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .users-management {
+        flex-direction: column;
+    }
+    
+    .create-user-form {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .create-user-form h3,
+    .users-list h3 {
+        font-size: 1.1rem;
+    }
+    
+    table td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+}
