@@ -1,20 +1,35 @@
 $(document).ready(function () {
   // Показываем #users_manager при клике на #menusers
+  
+ $('#settings').on('click', function () {
+    $('#viewSwitch').css('display', 'none');
+    $('#stngs_sect').css('display', 'flex');
+ });
+
   $('#menusers').on('click', function () {
     $('#users_manager').css('display', 'flex');
+    $('#trbls_dv_id').css('display', 'flex');
+    $('#viewSwitch').css('display', 'none');
+    $('#stngs_sect').css('display', 'none');
     loadUsers();
   });
 
   // Проверка на изменение URL
   $(window).on('hashchange', function () {
-    if (window.location.hash !== '#users_manager') {
+    if (window.location.hash !== '#users_manager' && window.location.hash !== '#settings') {
       $('#users_manager').css('display', 'none'); // Скрываем #users_manager, если хеш не #users_manager
+      $('#trbls_dv_id').css('display', 'none'); 
+      $('#viewSwitch').css('display', 'flex');
+      $('#stngs_sect').css('display', 'none');
     }
   });
 
   // Инициализируем проверку при первой загрузке
-  if (window.location.hash !== '#users_manager') {
+  if (window.location.hash !== '#users_manager' && window.location.hash !== '#settings') {
     $('#users_manager').css('display', 'none'); // Скрываем, если хеш не #users_manager
+    $('#trbls_dv_id').css('display', 'none');
+    $('#viewSwitch').css('display', 'flex');
+    $('#stngs_sect').css('display', 'none');
   }
 });
 
@@ -51,6 +66,39 @@ function loadUsers() {
         alert('Щось пішло не так, спробуйте ще раз');
     });
 }
+
+
+
+// Збереження налаштування
+document.querySelector("#setform_id").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+    formData.append('save_setings', 'true');
+
+    fetch('setting_handler.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        const messageBox = document.getElementById('createUserMessage');
+        if (data.success) {
+            messageBox.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+        } else {
+            messageBox.innerHTML = `<div class="alert alert-danger">${data.error || 'Сталася помилка при збереженні.'}</div>`;
+        }
+    })
+    .catch(err => {
+        console.error('Запит не вдався:', err);
+        const messageBox = document.getElementById('createUserMessage');
+        messageBox.innerHTML = `<div class="alert alert-danger">Помилка мережі. Спробуйте пізніше.</div>`;
+    });
+});
+
+
+
 
 // Створення користувача
 document.querySelector("#createUserForm").addEventListener("submit", function(event) {
@@ -169,3 +217,15 @@ function editUser(id) {
         .catch(() => alert('Помилка з\'єднання із сервером.'));
     };
 }
+
+
+
+
+
+
+
+
+
+
+
+
