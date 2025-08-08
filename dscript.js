@@ -67,6 +67,33 @@ function loadUsers() {
     });
 }
 
+//Отримання 
+
+fetch('setting_handler.php', {
+    method: 'GET',
+})
+    .then(res=> res.json())
+    .then(data=> {
+        if (data.success && data.data) {
+            document.getElementById('true_name').value = data.data.true_name || '';
+            document.getElementById('telega').value = data.data.telega || '';
+            document.getElementById('posada').value = data.data.posada || '';
+           if (data.data.avatar) {
+            document.getElementById('avatarPreview').src = 'assets/avatars/'+ data.data.avatar;
+            }
+        }
+    })
+    .catch(err => {
+        console.error ('Ne rabotaet',err);
+    });
+
+
+
+
+
+
+
+
 
 
 // Збереження налаштування
@@ -86,6 +113,9 @@ document.querySelector("#setform_id").addEventListener("submit", function(event)
         const messageBox = document.getElementById('createUserMessage');
         if (data.success) {
             messageBox.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+            if (data.avatar) {
+                document.getElementById('avatarPreview').src = 'assets/avatars/' + data.avatar + '?=' + Date.now();
+            }
         } else {
             messageBox.innerHTML = `<div class="alert alert-danger">${data.error || 'Сталася помилка при збереженні.'}</div>`;
         }

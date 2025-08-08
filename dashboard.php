@@ -20,6 +20,7 @@ require_once 'authcheck.php';
     <!-- Styles (додамо пізніше) -->
     <link rel="stylesheet" href="assets/dashboard-style.css">
     <link rel="stylesheet" href="assets/task-creator.css">
+    <link rel="stylesheet" href="assets/settings.css">
 </head>
 
 <body>
@@ -338,34 +339,61 @@ foreach ($rooms as $room) {
                 </div>
             </div>
 
+<section class="usr_stngs_section" id="stngs_sect">
+  <!-- ——— LEFT ——— -->
+  <div class="profile-aside">
+    <div class="ava_cont">
+      <img id="avatarPreview" src="" class="ava" alt="">
+      <!-- скрытый инпут и круглая кнопка-лейбл -->
+      <input type="file" id="avatar" name="avatar_file" class="ava_file">
+      <label for="avatar" class="ava_btn" title="Змінити фото">
+        <i class="fa-solid fa-camera"></i>
+      </label>
+    </div>
 
+    <div class="user-head">
+      <h2 class="user-name" id="dispName">Ім’я Користувача</h2>
+      <span class="user-role" id="dispRole">Посада / Роль</span>
+    </div>
+  </div>
 
+  <!-- ——— RIGHT ——— -->
+  <div class="profile-main">
+    <h3 class="block-title">Налаштування</h3>
 
+    <form class="usr_stngs_form" enctype="multipart/form-data" id="setform_id">
+      <div class="usr_stngs_field">
+        <label for="true_name">True Name</label>
+        <input type="text" id="true_name" name="true_name" class="usr_stngs_input">
+      </div>
 
-            <section class="usr_stngs_section" id="stngs_sect">
-                <h3>Налаштування</h3>
-                <form class="usr_stngs_form" id="setform_id">
-                    <div class="usr_stngs_field">
-                        <label for="avatar">Avatar</label>
-                        <input type="file" id="avatar" name="avatar" class="usr_stngs_input"  />
-                    </div>
-                    <div class="usr_stngs_field">
-                        <label for="true_name">True Name</label>
-                        <input type="text" id="true_name" name="true_name" class="usr_stngs_input"  />
-                    </div>
-                    <div class="usr_stngs_field">
-                        <label for="telega">Telega</label>
-                        <input type="text" id="telega" name="telega" class="usr_stngs_input" />
-                    </div>
-                    <div class="usr_stngs_field">
-                        <label for="posada">Posada</label>
-                        <input type="text" id="posada" name="posada" class="usr_stngs_input"  />
-                    </div>
-                    <div class="usr_stngs_field">
-                        <button type="submit" name="save_setings" class="usr_stngs_submit">Зберегти</button>
-                    </div>
-                </form>
-            </section>
+      <div class="usr_stngs_field">
+        <label for="telega">Telega</label>
+        <input type="text" id="telega" name="telega" class="usr_stngs_input">
+      </div>
+
+      <div class="usr_stngs_field">
+        <label for="posada">Posada</label>
+        <input type="text" id="posada" name="posada" class="usr_stngs_input">
+      </div>
+
+      <button type="submit" name="save_setings" class="usr_stngs_submit">
+        <i class="fa-solid fa-floppy-disk"></i> Зберегти
+      </button>
+    </form>
+
+    <div class="stats-card">
+      <h4 class="stats-title">Час витрачається на…</h4>
+      <ul class="stats-list">
+        <li>Product Infrastructure</li>
+        <li>Network Security</li>
+        <li>Security Testing</li>
+        <li>Security Audit Outsourcing</li>
+        <li>Bugs</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
 
 

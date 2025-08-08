@@ -1,0 +1,91 @@
+/* ─────  PROFILE CARD  ───── */
+.usr_stngs_section{
+    max-width: 880px;
+    margin: 3rem auto;
+    padding: 2.8rem 3.2rem;
+    display: flex; gap: 3rem;
+
+    background: rgba(255,255,255,.04);
+    backdrop-filter: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: 0 0 48px rgba(0,0,0,.45);
+}
+
+/* ——— LEFT ——— */
+.profile-aside{flex:0 0 260px;display:flex;flex-direction:column;align-items:center;gap:1.6rem;}
+.ava_cont{position:relative;width:180px;height:180px;border-radius:50%;}
+.ava{
+    width:100%;height:100%;object-fit:cover;border-radius:50%;
+    border:4px solid var(--bg2);
+    background:radial-gradient(circle at 40% 30%,#ffffff10 0%,#ffffff02 70%);
+}
+.ava_file{display:none;}                       /* скрыли нативный input */
+
+/* круглая кнопка-лейбл */
+.ava_btn{
+    position:absolute;right:8px;bottom:8px;
+    width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--neon1),var(--neon2));
+    border:2px solid var(--bg2);color:var(--white);font-size:1.3rem;cursor:pointer;
+    transition:transform .22s,box-shadow .22s;
+}
+.ava_btn:hover{transform:scale(1.08);box-shadow:0 0 22px rgba(76,131,255,.55);}
+
+.user-head{text-align:center;}
+.user-name{font-size:1.45rem;font-weight:600;}
+.user-role{font-size:.9rem;color:var(--txt-dim);}
+
+/* ——— RIGHT ——— */
+.profile-main{flex:1;display:flex;flex-direction:column;gap:2.2rem;}
+.block-title{font-size:1.35rem;font-weight:600;margin:0;}
+
+.usr_stngs_form{
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+    gap:1.4rem 2rem;
+}
+.usr_stngs_field{display:flex;flex-direction:column;gap:.4rem;}
+.usr_stngs_field label{font-size:.88rem;color:var(--txt-dim);}
+
+.usr_stngs_input{
+    padding:13px 16px;border-radius:14px;border:1px solid var(--border);
+    background:rgb(255 255 255 / 4%);font-size:.96rem;color:var(--white);
+    transition:border-color .22s,background .22s,box-shadow .22s;
+}
+.usr_stngs_input:focus{
+    border-color:var(--neon1);background:rgba(255,255,255,.07);box-shadow:0 0 0 3px #2afadf33;
+}
+
+/* submit */
+.usr_stngs_submit{
+    grid-column:1/-1;justify-self:start;
+    padding:13px 34px;border:none;border-radius:14px;
+    background:linear-gradient(135deg,var(--neon1),var(--neon2));
+    color:var(--white);font-weight:600;font-size:.9rem;cursor:pointer;
+    box-shadow:0 0 24px rgba(42,250,223,.45);
+    display:flex;align-items:center;gap:.6rem;
+    transition:transform .25s,box-shadow .25s;
+}
+.usr_stngs_submit:hover{transform:translateY(-3px);box-shadow:0 0 32px rgba(76,131,255,.55);}
+
+/* ——— STATS ——— */
+.stats-card{
+    background:rgba(255,255,255,.025);border:1px solid var(--border);
+    border-radius:20px;padding:1.6rem 1.8rem;
+}
+.stats-title{font-size:.96rem;font-weight:600;margin-bottom:1rem;}
+.stats-list{list-style:none;display:flex;flex-direction:column;gap:.65rem;}
+.stats-list li{
+    padding:.65rem 1.1rem;border:1px solid var(--border);border-radius:12px;
+    font-size:.9rem;color:var(--txt);background:rgba(255,255,255,.05);
+    transition:background .18s,border-color .18s;
+}
+.stats-list li:hover{background:rgba(255,255,255,.07);border-color:var(--neon2);cursor:default;}
+
+/* ——— MEDIA ——— */
+@media(max-width:768px){
+    .usr_stngs_section{flex-direction:column;gap:2rem;padding:2.4rem 1.8rem;}
+    .profile-aside{flex:none;}
+    .ava_cont{width:150px;height:150px;}
+}
