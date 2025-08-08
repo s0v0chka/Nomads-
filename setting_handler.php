@@ -12,6 +12,35 @@ $response = [
 ];
 
 
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    try {
+        $sql = "SELECT true_name, telega, posada, avatar FROM users WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$userId]);
+        $data = $stmt->fetch();
+
+        echo json_encode ([
+            'success' => true,
+            'data'=> $data
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode ([
+            'success' => false,
+            'error'=> 'Error' .
+            $e->getMessage()
+        ]);
+    }
+exit;
+
+
+
+}
+
+
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_setings'])) {
     $userId = $_SESSION['user_id'] ?? null;
     
@@ -20,16 +49,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_setings'])) {
         echo json_encode($response);
         exit;
     }
-
-
     // Отримуємо текстові поля
     $trueName = trim($_POST['true_name'] ?? '');
     $telega = trim($_POST['telega'] ?? '');
     $posada = trim($_POST['posada'] ?? '');
-    $avatar = trim($_POST['avatar'] ?? '');
-    
-    
-
+    $avatar = trim($_POST['avatar'] ?? ''); 
     try {
         // Готуємо SQL для оновлення (аватар оновлюємо тільки якщо він був завантажений)
         $sql = "UPDATE users SET true_name = ?, telega = ?, posada = ?, avatar = ?";

@@ -67,8 +67,33 @@ function loadUsers() {
     });
 }
 
+//Отримання 
+
+fetch('setting_handler.php', {
+    method: 'GET',
+})
+    .then(res=> res.json())
+    .then(data=> {
+        if (data.success && data.data) {
+            document.getElementById('true_name').value = data.data.true_name || '';
+            document.getElementById('telega').value = data.data.telega || '';
+            document.getElementById('posada').value = data.data.posada || '';
+            document.getElementById('avatar').value = data.data.avatar || '';
+        }
+    })
+    .catch(err => {
+        console.error ('Ne rabotaet',err);
+    });
 
 
+
+
+
+
+
+
+
+    
 // Збереження налаштування
 document.querySelector("#setform_id").addEventListener("submit", function(event) {
     event.preventDefault();
