@@ -17,6 +17,7 @@ require_once 'authcheck.php';
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Styles (додамо пізніше) -->
     <link rel="stylesheet" href="assets/dashboard-style.css">
+     <link rel="stylesheet" href="assets/task-creator.css">
 </head>
 <body>
 
@@ -43,21 +44,35 @@ require_once 'authcheck.php';
                     <i class="fas fa-layer-group"></i><span>Комнаты</span>
                     <i class="fas fa-chevron-down chevron"></i>
                 </button>
+                
+
                 <ul id="roomsList" class="submenu">
-             <?php
-                require_once 'db.php';
+                 <li class="addroom"><a class="baseadd">Добавить комнату  <i class="fas fa-plus"></i></a></li>   
+<?php
+require_once 'db.php';
+$userId = $_SESSION['user_id'];
+$stmt = $pdo->prepare("SELECT r.id, r.name, r.color FROM rooms r
+    JOIN room_users ru ON ru.room_id = r.id
+    WHERE ru.user_id = ?");
+$stmt->execute([$userId]);
+$rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                $userId = $_SESSION['user_id'];
-                $stmt = $pdo->prepare("SELECT r.id, r.name FROM rooms r
-                    JOIN room_users ru ON ru.room_id = r.id
-                    WHERE ru.user_id = ?");
-                $stmt->execute([$userId]);
-                $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+foreach ($rooms as $room) {
+    $color = htmlspecialchars($room['color'] ?? '#ff3b3b');
+    echo '<li class="room-item" data-room-id="' . $room['id'] . '" data-room-name="' . htmlspecialchars($room['name']) . '" data-room-color="' . $color . '">
+        <a href="#">
+            <span class="room-dot" style="background-color: ' . $color . ';"></span>
+            ' . htmlspecialchars($room['name']) . '
+        </a>
+        <button class="room-options"><i class="fas fa-ellipsis-h"></i></button>
+        <div class="room-menu" style="display:none;">
+            <div class="menu-option edit-room">Редактировать</div>
+            <div class="menu-option delete-room">Удалить</div>
+        </div>
+    </li>';
+}
+?>
 
-                foreach ($rooms as $room) {
-                    echo '<li><a href="#" data-room-id="' . $room['id'] . '">' . htmlspecialchars($room['name']) . '</a></li>';
-                }
-                ?>
                 </ul>
             </div>
 
@@ -85,6 +100,11 @@ require_once 'authcheck.php';
         <!-- TOPBAR -->
         <header class="topbar">
             <div class="topbar__left">
+
+                    <button id="openTaskCreatorBtn" class="create-task-btn">
+                        <i class="fas fa-plus"></i> Добавить задачу
+                    </button>
+
                 <!-- Переключатель видов задач -->
                 <div class="view-switch" id="viewSwitch">
                     <button class="view-btn active" data-view="kanban"><i class="fas fa-columns"></i><span>Канбан</span></button>
@@ -136,6 +156,91 @@ require_once 'authcheck.php';
          
             <!-- IVAN-AREA -->
 
+<div id="addRoomModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <button class="modal-close" title="Закрыть">&times;</button>
+    <h3 class="modal-title">Создание новой комнаты</h3>
+
+    <div class="modal-group">
+      <label for="newRoomName">Название:</label>
+      <input type="text" id="newRoomName" placeholder="Введите название комнаты">
+    </div>
+
+<div class="modal-group">
+  <label>Цвет комнаты:</label>
+  <div class="color-picker-wrap">
+    <div id="colorDisplay" class="color-display"></div>
+    <input type="color" id="roomColor" name="color" value="#ff3b3b">
+  </div>
+</div>
+
+
+    <button id="saveRoomBtn" class="modal-submit">Создать</button>
+  </div>
+</div>
+
+
+
+<div id="editRoomModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <button class="modal-close" title="Закрыть" onclick="document.getElementById('editRoomModal').style.display='none'">&times;</button>
+    <h3 class="modal-title">Редактирование комнаты</h3>
+
+    <div>
+    <div class="modal-group">
+      <label for="editRoomName">Название:</label>
+      <input type="text" id="editRoomName" placeholder="Введите новое название комнаты">
+
+              
+
+      <div class="color-picker-wrap">
+        <div id="editColorDisplay" class="color-display"></div>
+        <input type="color" id="editRoomColor" name="color" value="#ff3b3b">
+      </div>
+
+
+    </div>
+
+    
+            </div>
+    <input type="hidden" id="editRoomId">
+
+<div class="modal-group">
+  <label>Учасники:</label>
+  <div id="roomUsersList" class="user-tags"></div>
+</div>
+
+<div class="modal-group">
+  <label for="addUserInput">Добавить пользователя:</label>
+  <div class="user-input-wrap">
+    <input type="text" id="addUserInput" placeholder="Введите имя пользователя">
+    <ul id="userSuggestions" class="suggestions-list"></ul>
+  </div>
+</div>
+
+
+
+
+    <button id="saveEditBtn" class="modal-submit">Сохранить</button>
+  </div>
+</div>
+
+
+
+<div id="confirmDeleteModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <button class="modal-close" title="Закрыть" onclick="closeDeleteModal()">&times;</button>
+    <h3 class="modal-title">Удалить комнату?</h3>
+    <p style="margin-top: 10px;">Вы уверены, что хотите удалить эту комнату? Это действие необратимо.</p>
+
+    <input type="hidden" id="deleteRoomId">
+
+    <div style="display: flex; gap: 7px; justify-content: space-between; margin-top: 20px;">
+      <button class="modal-submit" style="background: var(--bg2); color: var(--white); border: 1px solid var(--border);" onclick="closeDeleteModal()">Отмена</button>
+      <button class="modal-submit" style="background: red;" onclick="confirmRoomDeletion()">Удалить</button>
+    </div>
+  </div>
+</div>
 
 
 
@@ -143,15 +248,7 @@ require_once 'authcheck.php';
 
 
 
-
-
-
-
-
-
-
-
-
+<div id="taskCreatorWrapper"></div>
 
 
 
@@ -262,5 +359,14 @@ require_once 'authcheck.php';
 
     <!-- Scripts (додамо потім) -->
     <script src="assets/dashboard.js"></script>
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/rangePlugin.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+
+<script src="assets/task-creator.js"></script>
 </body>
 </html>
