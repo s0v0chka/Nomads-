@@ -130,27 +130,27 @@ foreach ($rooms as $room) {
         <div id="editUserModal" class="moduser_modal">
             <div class="moduser_modal-content">
                 <button id="closeModal" class="moduser_close-button">×</button>
-                <h3 class="moduser_title">Редагувати користувача</h3>
+                <h3 class="moduser_title">Редактировать пользователя</h3>
 
                 <input type="text" id="editUsername" class="moduser_input" placeholder="Логін" />
 
                 <select id="editRole" class="moduser_select">
-                    <option value="">Виберіть роль</option>
-                    <option value="user">Користувач</option>
-                    <option value="admin">Адмін</option>
+                    <option value="">Выберите роль</option>
+                    <option value="user">Пользователь</option>
+                    <option value="admin">Админ</option>
                 </select>
 
-                <input type="password" id="editPassword" class="moduser_input" placeholder="Новий пароль (необов'язково)" />
+                <input type="password" id="editPassword" class="moduser_input" placeholder="Новый пароль" />
 
-                <input type="text" id="editTelegram" class="moduser_input" placeholder="Новий telegram" />
+                <input type="text" id="editTelegram" class="moduser_input" placeholder="Новый telegram" />
                 
                 <input type="text" id="editTrueName" class="moduser_input" placeholder="Новое Имя" />
 
                 <input type="text" id="editPosada" class="moduser_input" placeholder="Новая должность" />
 
                 <div class="moduser_modal-buttons">
-                    <button id="saveUserBtn" class="moduser_btn moduser_save">Зберегти</button>
-                    <button id="cancelUserBtn" class="moduser_btn moduser_cancel">Скасувати</button>
+                    <button id="saveUserBtn" class="moduser_btn moduser_save">Сохранить</button>
+                    <button id="cancelUserBtn" class="moduser_btn moduser_cancel">Отмениь</button>
                 </div>
             </div>
         </div>
@@ -220,7 +220,7 @@ foreach ($rooms as $room) {
                     <input type="hidden" id="editRoomId">
 
                     <div class="modal-group">
-                        <label>Учасники:</label>
+                        <label>Участники:</label>
                         <div id="roomUsersList" class="user-tags"></div>
                     </div>
 
@@ -293,7 +293,7 @@ foreach ($rooms as $room) {
                 <!-- Форма додавання користувача -->
                 <form id="createUserForm" method="POST">
                     <div class="form-group">
-                        <label>Логін:</label>
+                        <label>Логин:</label>
                         <input type="text" name="username" required>
                     </div>
 
@@ -305,14 +305,14 @@ foreach ($rooms as $room) {
                     <div class="form-group">
                         <label>Роль:</label>
                         <select name="role" required>
-                            <option value="user">Користувач</option>
-                            <option value="admin">Адміністратор</option>
+                            <option value="user">Пользователь</option>
+                            <option value="admin">Админ</option>
                         </select>
                     </div>
 
 
 
-                    <button type="submit" name="create_user" class="btn btn-primary">Додати користувача</button>
+                    <button type="submit" name="create_user" class="btn btn-primary">Добавить пользователя</button>
                 </form>
 
 
@@ -327,12 +327,12 @@ foreach ($rooms as $room) {
 
                 <!-- Список користувачів -->
                 <div class="users-list">
-                    <h3>Список користувачів</h3>
+                    <h3>Список пользователей</h3>
                     <table id="users_table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Логін</th>
+                                <th>Логин</th>
                                 <th>Роль</th>
                                 <th>Аватар</th>
                                 <th>Телеграм</th>
@@ -354,7 +354,7 @@ foreach ($rooms as $room) {
 
   <!-- ——— RIGHT ——— -->
   <div class="profile-main">
-    <h3 class="block-title">Налаштування</h3>
+    <h3 class="block-title">Настройки</h3>
 
     <form class="usr_stngs_form" enctype="multipart/form-data" id="setform_id">
 
@@ -369,29 +369,29 @@ foreach ($rooms as $room) {
         </div>
 
         <div class="user-head">
-            <h2 class="user-name" id="dispName">Ім’я Користувача</h2>
-            <span class="user-role" id="dispRole">Посада / Роль</span>
+            <h2 class="user-name" id="dispName">Имя пользователя</h2>
+            <span class="user-role" id="dispRole">Должность / Роль</span>
         </div>
     </div>          
 
       <div class="bedokur">
         <div class="usr_stngs_field">
-            <label for="true_name">True Name</label>
+            <label for="true_name">Настоящее имя</label>
             <input type="text" id="true_name" name="true_name" class="usr_stngs_input">
         </div>
 
         <div class="usr_stngs_field">
-            <label for="telega">Telega</label>
+            <label for="telega">Телеграм</label>
             <input type="text" id="telega" name="telega" class="usr_stngs_input">
         </div>
 
         <div class="usr_stngs_field">
-            <label for="posada">Posada</label>
+            <label for="posada">Должность</label>
             <input type="text" id="posada" name="posada" class="usr_stngs_input">
         </div>
 
         <button type="submit" name="save_setings" class="usr_stngs_submit">
-            <i class="fa-solid fa-floppy-disk"></i> Зберегти
+            <i class="fa-solid fa-floppy-disk"></i> Сохранить
         </button>
       </div>          
 
