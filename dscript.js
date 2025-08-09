@@ -4,6 +4,7 @@ $(document).ready(function () {
  $('#settings').on('click', function () {
     $('#viewSwitch').css('display', 'none');
     $('#stngs_sect').css('display', 'flex');
+    $('#users_manager').css('display', 'none');
  });
 
   $('#menusers').on('click', function () {
