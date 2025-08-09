@@ -140,8 +140,9 @@ foreach ($rooms as $room) {
                     <option value="admin">Адмін</option>
                 </select>
 
-                <input type="password" id="editPassword" class="moduser_input"
-                    placeholder="Новий пароль (необов'язково)" />
+                <input type="password" id="editPassword" class="moduser_input" placeholder="Новий пароль (необов'язково)" />
+
+                <input type="text" id="editTelegram" class="moduser_input" placeholder="Новий telegram" />    
 
                 <div class="moduser_modal-buttons">
                     <button id="saveUserBtn" class="moduser_btn moduser_save">Зберегти</button>
@@ -329,6 +330,8 @@ foreach ($rooms as $room) {
                                 <th>ID</th>
                                 <th>Логін</th>
                                 <th>Роль</th>
+                                <th>Аватар</th>
+                                <th>Телеграм</th>
                                 <th>Дії</th>
                             </tr>
                         </thead>
@@ -341,45 +344,51 @@ foreach ($rooms as $room) {
 
 <section class="usr_stngs_section" id="stngs_sect">
   <!-- ——— LEFT ——— -->
-  <div class="profile-aside">
-    <div class="ava_cont">
-      <img id="avatarPreview" src="" class="ava" alt="">
-      <!-- скрытый инпут и круглая кнопка-лейбл -->
-      <input type="file" id="avatar" name="avatar_file" class="ava_file">
-      <label for="avatar" class="ava_btn" title="Змінити фото">
-        <i class="fa-solid fa-camera"></i>
-      </label>
-    </div>
-
-    <div class="user-head">
-      <h2 class="user-name" id="dispName">Ім’я Користувача</h2>
-      <span class="user-role" id="dispRole">Посада / Роль</span>
-    </div>
-  </div>
+  
 
   <!-- ——— RIGHT ——— -->
   <div class="profile-main">
     <h3 class="block-title">Налаштування</h3>
 
     <form class="usr_stngs_form" enctype="multipart/form-data" id="setform_id">
-      <div class="usr_stngs_field">
-        <label for="true_name">True Name</label>
-        <input type="text" id="true_name" name="true_name" class="usr_stngs_input">
-      </div>
 
-      <div class="usr_stngs_field">
-        <label for="telega">Telega</label>
-        <input type="text" id="telega" name="telega" class="usr_stngs_input">
-      </div>
+      <div class="profile-aside">
+        <div class="ava_cont">
+        <img id="avatarPreview" src="" class="ava" alt="">
+        <!-- скрытый инпут и круглая кнопка-лейбл -->
+        <input type="file" id="avatar" name="avatar_file" class="ava_file">
+        <label for="avatar" class="ava_btn" title="Змінити фото">
+            <i class="fa-solid fa-camera"></i>
+        </label>
+        </div>
 
-      <div class="usr_stngs_field">
-        <label for="posada">Posada</label>
-        <input type="text" id="posada" name="posada" class="usr_stngs_input">
-      </div>
+        <div class="user-head">
+            <h2 class="user-name" id="dispName">Ім’я Користувача</h2>
+            <span class="user-role" id="dispRole">Посада / Роль</span>
+        </div>
+    </div>          
 
-      <button type="submit" name="save_setings" class="usr_stngs_submit">
-        <i class="fa-solid fa-floppy-disk"></i> Зберегти
-      </button>
+      <div class="bedokur">
+        <div class="usr_stngs_field">
+            <label for="true_name">True Name</label>
+            <input type="text" id="true_name" name="true_name" class="usr_stngs_input">
+        </div>
+
+        <div class="usr_stngs_field">
+            <label for="telega">Telega</label>
+            <input type="text" id="telega" name="telega" class="usr_stngs_input">
+        </div>
+
+        <div class="usr_stngs_field">
+            <label for="posada">Posada</label>
+            <input type="text" id="posada" name="posada" class="usr_stngs_input">
+        </div>
+
+        <button type="submit" name="save_setings" class="usr_stngs_submit">
+            <i class="fa-solid fa-floppy-disk"></i> Зберегти
+        </button>
+      </div>          
+
     </form>
 
     <div class="stats-card">

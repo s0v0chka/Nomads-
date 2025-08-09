@@ -15,7 +15,7 @@ $response = [
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         // Отримуємо список користувачів
-        $stmt = $pdo->query("SELECT id, username, role FROM users ORDER BY id DESC");
+        $stmt = $pdo->query("SELECT id, username, role, avatar, telega FROM users ORDER BY id DESC");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);  // Отримуємо список користувачів
 
         echo json_encode([
@@ -96,12 +96,13 @@ if (isset($_POST['edit_user'])) {
     $username = trim($_POST['username'] ?? '');
     $role = trim($_POST['role'] ?? '');
     $password = $_POST['password'] ?? null;
-
+    $telega = $_POST['telega'] ?? '';
     try {
         // Отримуємо поточні дані користувача
-        $stmt = $pdo->prepare("SELECT username, role FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT username, role, telega FROM users WHERE id = ?");
         $stmt->execute([$id]);
         $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
+
 
         if (!$currentUser) {
             $response['error'] = "Користувача не знайдено.";
@@ -127,6 +128,12 @@ if (isset($_POST['edit_user'])) {
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
                 $sqlParts[] = "password = ?";
                 $params[] = $passwordHash;
+            }
+
+            // Якщо передано нове telega і воно відрізняється від поточного
+            if (!empty($telega) && $telega !== $currentUser['telega']) {
+                $sqlParts[] = "telega = ?";
+                $params[] = $telega;
             }
             
             // Якщо є щось для оновлення

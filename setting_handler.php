@@ -49,42 +49,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_setings'])) {
         echo json_encode($response);
         exit;
     }
+    
     // Отримуємо текстові поля
     $trueName = trim($_POST['true_name'] ?? '');
     $telega = trim($_POST['telega'] ?? '');
     $posada = trim($_POST['posada'] ?? '');
-    $avatar = '';
-     $avatar = null;
-        if (!empty($_FILES ['avatar_file']['name'])) {
-            $uploadDir = 'assets/avatars/';
-            $filename = basename($_FILES['avatar_file']['name']);
-            
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
-            $allowedExt = ['jpeg','png','webp','jpg'];
-            if (!in_array (strtolower($ext),$allowedExt)) {
-                 $response['error'] = 'error not valid format';
+    $avatar = null;
+    
+    // Отримуємо поточний аватар
+    $currentAvatar = '';
+    $stmt = $pdo->prepare("SELECT avatar FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $userData = $stmt->fetch();
+    if ($userData && !empty($userData['avatar'])) {
+        $currentAvatar = $userData['avatar'];
+    }
+    
+    if (!empty($_FILES['avatar_file']['name'])) {
+        $uploadDir = 'assets/avatars/';
+        $filename = basename($_FILES['avatar_file']['name']);
+        
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $allowedExt = ['jpeg','png','webp','jpg'];
+        if (!in_array(strtolower($ext), $allowedExt)) {
+            $response['error'] = 'error not valid format';
+            echo json_encode($response);
+            exit;
+        }
+        
+        // Видаляємо старий аватар, якщо він існує
+        if (!empty($currentAvatar)) {
+            $oldFilePath = $uploadDir . $currentAvatar;
+            if (file_exists($oldFilePath) && !unlink($oldFilePath)) {
+                $response['error'] = 'Не вдалося видалити старий аватар';
                 echo json_encode($response);
                 exit;
             }
-            $filename = 'user_' . $userId . '_' . time() . '.' . $ext;
-
-            $targetPath = $uploadDir .  $filename;
-            if (move_uploaded_file($_FILES['avatar_file']['tmp_name'], $targetPath)) {
-                $avatar = $filename;
-            } else {
-                $response['error'] = 'error not saved';
-                echo json_encode($response);
-                exit;
-            }
-        } 
+        }
+        
+        $filename = 'user_' . $userId . '_' . time() . '.' . $ext;
+        $targetPath = $uploadDir . $filename;
+        
+        if (move_uploaded_file($_FILES['avatar_file']['tmp_name'], $targetPath)) {
+            $avatar = $filename;
+        } else {
+            $response['error'] = 'error not saved';
+            echo json_encode($response);
+            exit;
+        }
+    } 
+    
     try {
-          $params = [$trueName, $telega, $posada];
-        // Готуємо SQL для оновлення (аватар оновлюємо тільки якщо він був завантажений)
+        $params = [$trueName, $telega, $posada];
         $sql = "UPDATE users SET true_name = ?, telega = ?, posada = ?";
       
-
         if ($avatar !== null) {
-            $sql .= ", avatar =?";
+            $sql .= ", avatar = ?";
             $params[] = $avatar;
             $response['avatar'] = $avatar;
         }
