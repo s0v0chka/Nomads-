@@ -142,7 +142,11 @@ foreach ($rooms as $room) {
 
                 <input type="password" id="editPassword" class="moduser_input" placeholder="Новий пароль (необов'язково)" />
 
-                <input type="text" id="editTelegram" class="moduser_input" placeholder="Новий telegram" />    
+                <input type="text" id="editTelegram" class="moduser_input" placeholder="Новий telegram" />
+                
+                <input type="text" id="editTrueName" class="moduser_input" placeholder="Новое Имя" />
+
+                <input type="text" id="editPosada" class="moduser_input" placeholder="Новая должность" />
 
                 <div class="moduser_modal-buttons">
                     <button id="saveUserBtn" class="moduser_btn moduser_save">Зберегти</button>
@@ -332,7 +336,9 @@ foreach ($rooms as $room) {
                                 <th>Роль</th>
                                 <th>Аватар</th>
                                 <th>Телеграм</th>
-                                <th>Дії</th>
+                                <th>Имя</th>
+                                <th>Должность</th>
+                                <th>Действия</th>
                             </tr>
                         </thead>
                         <tbody>

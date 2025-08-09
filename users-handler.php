@@ -15,7 +15,7 @@ $response = [
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         // Отримуємо список користувачів
-        $stmt = $pdo->query("SELECT id, username, role, avatar, telega FROM users ORDER BY id DESC");
+        $stmt = $pdo->query("SELECT id, username, role, avatar, telega, true_name, posada FROM users ORDER BY id DESC");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);  // Отримуємо список користувачів
 
         echo json_encode([
@@ -97,9 +97,11 @@ if (isset($_POST['edit_user'])) {
     $role = trim($_POST['role'] ?? '');
     $password = $_POST['password'] ?? null;
     $telega = $_POST['telega'] ?? '';
+    $true_name = $_POST['true_name'] ?? '';
+    $posada = $_POST['posada'] ?? '';
     try {
         // Отримуємо поточні дані користувача
-        $stmt = $pdo->prepare("SELECT username, role, telega FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT username, role, telega, true_name, posada FROM users WHERE id = ?");
         $stmt->execute([$id]);
         $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -134,6 +136,18 @@ if (isset($_POST['edit_user'])) {
             if (!empty($telega) && $telega !== $currentUser['telega']) {
                 $sqlParts[] = "telega = ?";
                 $params[] = $telega;
+            }
+
+            // Якщо передано нове true_name і воно відрізняється від поточного
+            if (!empty($true_name) && $true_name !== $currentUser['true_name']) {
+                $sqlParts[] = "true_name = ?";
+                $params[] = $true_name;
+            }
+
+            // Якщо передано нове posada і воно відрізняється від поточного
+            if (!empty($posada) && $posada !== $currentUser['posada']) {
+                $sqlParts[] = "posada = ?";
+                $params[] = $posada;
             }
             
             // Якщо є щось для оновлення

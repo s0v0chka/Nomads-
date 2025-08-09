@@ -53,6 +53,8 @@ function loadUsers() {
                     <td>${user.role}</td>
                     <td><img src="assets/avatars/${user.avatar}" alt="Аватар користувача" style="width: 14px; height: 14px; border-radius: 50%;"></td>
                     <td>${user.telega}</td>
+                    <td>${user.true_name}</td>
+                    <td>${user.posada}</td>
                     <td>
                         <button class="btn btn-primary" onclick="editUser(${user.id})">Редагувати</button>
                         <button class="btn btn-danger" onclick="deleteUser(${user.id})">Видалити</button>
@@ -186,6 +188,8 @@ function editUser(id) {
     const roleInput = document.getElementById('editRole');
     const passwordInput = document.getElementById('editPassword');
     const telegramInput = document.getElementById('editTelegram');
+    const true_nameInput = document.getElementById('editTrueName');
+    const posadaInput = document.getElementById('editPosada');
 
     // Отримуємо поточні дані користувача перед відкриттям модального вікна
     fetch('users-handler.php')
@@ -199,6 +203,8 @@ function editUser(id) {
                 roleInput.value = user.role;
                 passwordInput.value = '';
                 telegramInput.value = user.telega;
+                true_nameInput.value = user.true_name;
+                posadaInput.value = user.posada;
             }
         }
     });
@@ -220,6 +226,8 @@ function editUser(id) {
         const role = roleInput.value.trim();
         const password = passwordInput.value;
         const telega = telegramInput.value.trim();
+        const true_name = true_nameInput.value.trim();
+        const posada = posadaInput.value.trim();
 
         // Валідація: хоча б одне поле має бути змінене
         const formData = new URLSearchParams();
@@ -231,9 +239,11 @@ function editUser(id) {
         if (role) formData.append('role', role);
         if (password) formData.append('password', password);
         if (telega) formData.append('telega', telega);
+        if (true_name) formData.append('true_name', true_name);
+        if (posada) formData.append('posada', posada);
 
         // Якщо нічого не змінено
-        if (!username && !role && !password && !telega) {
+        if (!username && !role && !password && !telega && !true_name && !posada) {
             alert("Будь ласка, змініть хоча б одне поле!");
             return;
         }
