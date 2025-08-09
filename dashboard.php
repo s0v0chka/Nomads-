@@ -83,7 +83,7 @@ foreach ($rooms as $room) {
             <?php if ($role === 'admin'): ?>
             <a class="menu__item " id=menusers href="#users_manager"><i
                     class="fas fa-users"></i><span>Пользователи</span></a>
-            <a class="menu__item" href="#settings" id="settings"><i class="fas fa-cog"></i><span>Settings3</span></a>
+            <a class="menu__item" href="#settings" id="settings"><i class="fas fa-cog"></i><span>Профиль</span></a>
             <?php endif; ?>
         </nav>
 
