@@ -87,8 +87,26 @@ async function initTaskCreator() {
       btnDue.className = 'fp-tab active';
       btnDue.textContent = 'Due date';
 
+      // Створюємо кнопку очищення
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'fp-clear-btn';
+      clearBtn.innerHTML = '&times;';
+      clearBtn.title = 'Очистити дати';
+      clearBtn.style.display = 'none'; // Спочатку прихована
+
       head.append(btnStart, btnDue);
       inst.calendarContainer.prepend(head);
+      inst.calendarContainer.appendChild(clearBtn); // Додаємо кнопку в контейнер календаря
+
+      // Обробник кліку для кнопки очищення
+      clearBtn.addEventListener('click', () => {
+        startDate = null;
+        dueDate = null;
+        startISO.value = '';
+        dueISO.value = '';
+        updateDateDisplay();
+        picker.clear();
+      });
 
       btnStart.onclick = () => {
         if (activeTab === 'start') return;
@@ -108,6 +126,8 @@ async function initTaskCreator() {
 
     onOpen: () => {
       dispBtn.classList.add('active');
+      const clearBtn = document.querySelector('.fp-clear-btn');
+      if (clearBtn) clearBtn.style.display = 'flex';
       // При открытии всегда активен due date
       if (activeTab === 'start') {
         document.querySelector('.fp-header .fp-tab:last-child').click();
@@ -116,6 +136,8 @@ async function initTaskCreator() {
 
     onClose: () => {
       dispBtn.classList.remove('active');
+      const clearBtn = document.querySelector('.fp-clear-btn');
+      if (clearBtn) clearBtn.style.display = 'none';
     },
 
     /* выбор даты */
