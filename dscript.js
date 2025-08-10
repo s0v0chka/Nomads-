@@ -271,10 +271,58 @@ function editUser(id) {
 
 
 
+document.querySelector('button[name="create_user"]').addEventListener('click', function (e) {
+  
+
+  const username = document.querySelector('input[name="username"]').value.trim();
+  const password = document.querySelector('input[name="password"]').value.trim();
+
+  if (!username || !password) {
+    alert('Заповни обидва поля!');
+    return;
+  }
+
+  const dataToCopy = `${username}:${password}`;
+
+  navigator.clipboard.writeText(dataToCopy).then(() => {
+    console.log('Скопійовано:', dataToCopy);
+  }).catch(err => {
+    console.error('Помилка копіювання:', err);
+  });
+});
 
 
+function generatePassword(length = 10) {
+  const lower = 'abcdefghijklmnopqrstuvwxyz';
+  const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const numbers = '0123456789';
+  const symbols = '!@#$%^&*()-_=+[]{};:,.<>?';
 
+  const allChars = lower + upper + numbers + symbols;
 
+  let password = '';
+  // Гарантуємо наявність кожного типу символів
+  password += lower[Math.floor(Math.random() * lower.length)];
+  password += upper[Math.floor(Math.random() * upper.length)];
+  password += numbers[Math.floor(Math.random() * numbers.length)];
+  password += symbols[Math.floor(Math.random() * symbols.length)];
+
+  // Заповнюємо решту випадковими символами
+  for (let i = password.length; i < length; i++) {
+    password += allChars[Math.floor(Math.random() * allChars.length)];
+  }
+
+  // Перемішуємо символи
+  password = password.split('').sort(() => 0.5 - Math.random()).join('');
+
+  return password;
+}
+
+document.getElementById('genpass').addEventListener('click', function () {
+  const passField = document.querySelector('input[name="password"]');
+  const newPass = generatePassword(10); // тут можна задати довжину
+  passField.value = newPass;
+});
 
 
 

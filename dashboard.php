@@ -83,7 +83,7 @@ foreach ($rooms as $room) {
             <?php if ($role === 'admin'): ?>
             <a class="menu__item " id=menusers href="#users_manager"><i
                     class="fas fa-users"></i><span>Пользователи</span></a>
-            <a class="menu__item" href="#settings" id="settings"><i class="fas fa-cog"></i><span>Профиль</span></a>
+            <a class="menu__item" href="#settings" id="settings"><i class="fa-solid fa-user"></i><span>Профиль</span></a>
             <?php endif; ?>
         </nav>
 
@@ -276,22 +276,61 @@ foreach ($rooms as $room) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <!-- IVAN-END-AREA -->
             <!-- DIMA-AREA -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div style="z-index:66; position:relative;" class="users-management" id="users_manager">
   <!-- фоновые акценты -->
@@ -327,7 +366,7 @@ foreach ($rooms as $room) {
         <div class="form-group um-field">
           <label>Логин:</label>
           <div class="um-inputwrap">
-            <span class="um-icn" aria-hidden="true">👤</span>
+            
             <input type="text" autocomplete="off" name="username" required>
             <input style="display:none" aria-hidden="true" type="password" name="fakepass" autocomplete="current-password">
           </div>
@@ -336,8 +375,8 @@ foreach ($rooms as $room) {
         <div class="form-group um-field">
           <label>Пароль:</label>
           <div class="um-inputwrap">
-            <span class="um-icn" aria-hidden="true">🔒</span>
-            <input type="password" autocomplete="off" name="password" required>
+            
+            <input type="password" autocomplete="off" name="password" required><i class="fa-solid fa-dice" id="genpass"></i>
             <input style="display:none" aria-hidden="true" type="text" name="fakeuser" autocomplete="username">
           </div>
         </div>
@@ -368,14 +407,14 @@ foreach ($rooms as $room) {
         <table id="users_table" class="um-table">
           <thead>
             <tr>
-              <th style="width:72px;">ID</th>
+              <th>ID</th>
               <th>Логин</th>
               <th>Роль</th>
               <th>Аватар</th>
               <th>Телеграм</th>
               <th>Имя</th>
               <th>Должность</th>
-              <th style="min-width:180px;">Действия</th>
+              <th>Действия</th>
             </tr>
           </thead>
           <tbody>
@@ -484,20 +523,8 @@ foreach ($rooms as $room) {
   </div>
 </section>
 
-
-
-
-
             <link rel="stylesheet" href="dstyle.css">
             <script src="dscript.js"></script>
-
-
-
-
-
-
-
-
 
             <!-- DIMA-END-AREA -->
             <div class="content__placeholder">

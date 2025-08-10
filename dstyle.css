@@ -195,7 +195,13 @@
   border-collapse: separate;
   border-spacing: 0;
   font-size: .80rem;
+  table-layout: unset;
 }
+
+
+
+
+
 .um-table thead th{
   position: sticky;
   top:0;
@@ -215,6 +221,10 @@
   color: var(--txt);
   border-bottom:1px solid var(--border);
   vertical-align: middle;
+  width: 4vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .um-table tr:last-child td{ border-bottom:0; }
 .um-table tbody tr{
