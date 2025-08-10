@@ -401,3 +401,390 @@ async function initTaskCreator() {
 
 
 
+
+
+
+
+
+/* ======================= UPLOAD BATCH STATE ======================= */
+let currentBatchId = null;
+let uploadedFiles = [];
+let batchPromise = null;
+// гарантируем, что есть batch для текущей сессии загрузок
+async function ensureBatch() {
+  if (currentBatchId) return currentBatchId;
+  // если уже создаём — подождём тот же промис
+  if (batchPromise) return batchPromise;
+
+  batchPromise = (async () => {
+    const r = await fetch('task-creator-handler.php?action=start_upload_batch', { credentials: 'same-origin' });
+    const j = await r.json();
+    if (!j.success || !j.batch_id) throw new Error('Не удалось создать batch');
+    currentBatchId = j.batch_id;
+    return currentBatchId;
+  })();
+
+  try {
+    return await batchPromise;
+  } finally {
+    // после успешного создания сбрасываем промис
+    batchPromise = null;
+  }
+}
+
+/* ======================= DROPDOWN ======================= */
+function initDropdown(dropdownEl, items, placeholder, onChange) {
+  const selectedEl = dropdownEl.querySelector('.tc-dropdown-selected');
+  const listEl = dropdownEl.querySelector('.tc-dropdown-list');
+  const wrap = dropdownEl.closest('.tc-inputwrap');
+
+  // Сброс прежних слушателей на selected
+  const newSelectedEl = selectedEl.cloneNode(true);
+  selectedEl.parentNode.replaceChild(newSelectedEl, selectedEl);
+
+  // Закрыть все списки в панели
+  const closeAll = () => {
+    document
+      .querySelectorAll('#taskCreatorWrapper .tc-dropdown-list')
+      .forEach(el => {
+        el.style.display = 'none';
+        const dd = el.closest('.tc-dropdown');
+        dd?.classList.remove('is-open');
+        dd?.closest('.tc-inputwrap')?.classList.remove('is-open');
+      });
+  };
+
+  const isRoomDD = dropdownEl.id === 'taskRoomDropdown';
+
+  // как рисовать пункт списка / выбранное значение
+  const renderItemHTML = (item) => {
+    if (isRoomDD) {
+      const color = item.color || '#666';
+      const label = item.name || item.label;
+      return `
+        <span class="dd-dot" style="background:${color}"></span>
+        <span class="dd-text">${label}</span>
+      `;
+    } else {
+      const ava = item.avatar ? `assets/avatars/${item.avatar}` : 'assets/avatars/user.png';
+      const label = item.display || item.label || item.username || item.name;
+      return `
+        <img class="dd-ava" src="${ava}" alt="">
+        <span class="dd-text">${label}</span>
+      `;
+    }
+  };
+
+  const setSelectedContent = (itemOrText) => {
+    if (typeof itemOrText === 'string') {
+      newSelectedEl.textContent = itemOrText;
+      newSelectedEl.dataset.value = '';
+      return;
+    }
+    newSelectedEl.innerHTML = renderItemHTML(itemOrText);
+    newSelectedEl.dataset.value = String(itemOrText.id ?? itemOrText.value ?? '');
+  };
+
+  // Плейсхолдер
+  listEl.innerHTML = '';
+  if (!items || !items.length) {
+    setSelectedContent(placeholder);
+    return;
+  }
+
+  // Рендер списка
+  const frag = document.createDocumentFragment();
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.dataset.value = String(item.id ?? item.value);
+    li.innerHTML = renderItemHTML(item);
+    li.addEventListener('click', () => {
+      setSelectedContent(item);
+      listEl.style.display = 'none';
+      dropdownEl.classList.remove('is-open');
+      wrap?.classList.remove('is-open');
+      if (typeof onChange === 'function') onChange(item.id ?? item.value, item);
+    });
+    frag.appendChild(li);
+  });
+  listEl.appendChild(frag);
+
+  // Открыть/закрыть список
+  newSelectedEl.addEventListener('click', () => {
+    const isOpen = listEl.style.display === 'block';
+    closeAll();
+    listEl.style.display = isOpen ? 'none' : 'block';
+    dropdownEl.classList.toggle('is-open', !isOpen);
+    wrap?.classList.toggle('is-open', !isOpen);
+  });
+
+  // Клик вне — закрыть
+  document.addEventListener('click', (e) => {
+    if (!dropdownEl.contains(e.target)) {
+      listEl.style.display = 'none';
+      dropdownEl.classList.remove('is-open');
+      wrap?.classList.remove('is-open');
+    }
+  });
+}
+
+/* ======================= META WIRING ======================= */
+async function wireTaskMeta(panelEl) {
+  const roomDropdown = panelEl.querySelector('#taskRoomDropdown');
+  const userDropdown = panelEl.querySelector('#taskAssigneeDropdown');
+  if (!roomDropdown || !userDropdown) return;
+
+  // 1) Комнаты текущего пользователя
+  let rooms = [];
+  try {
+    const r = await fetch('task-creator-handler.php?action=rooms_for_me', { credentials: 'same-origin' });
+    const j = await r.json();
+    rooms = j.rooms || [];
+  } catch (e) {
+    console.warn('rooms_for_me failed', e);
+  }
+
+  const roomItems = rooms.map(r => ({ id: r.id, name: r.name, color: r.color }));
+
+  // При выборе комнаты — грузим исполнителей и сбрасываем выбранного
+  initDropdown(roomDropdown, roomItems, 'Выберите комнату', (roomId) => {
+    loadAssignees(roomId);
+  });
+
+  // Если одна комната — сразу её показываем красиво и грузим пользователей
+  if (rooms.length === 1) {
+    const item = { id: rooms[0].id, name: rooms[0].name, color: rooms[0].color };
+    const sel = roomDropdown.querySelector('.tc-dropdown-selected');
+    sel.innerHTML = `
+      <span class="dd-dot" style="background:${item.color || '#666'}"></span>
+      <span class="dd-text">${item.name}</span>
+    `;
+    sel.dataset.value = String(item.id);
+    loadAssignees(item.id);
+  } else {
+    // при первом показе — чистим исполнителей
+    initDropdown(userDropdown, [], 'Выберите исполнителя');
+  }
+
+  // 2) Загрузка исполнителей выбранной комнаты
+  async function loadAssignees(roomId) {
+    initDropdown(userDropdown, [], 'Выберите исполнителя'); // мгновенный сброс
+
+    let users = [];
+    try {
+      const r = await fetch(
+        'task-creator-handler.php?action=users_in_room&room_id=' + encodeURIComponent(roomId),
+        { credentials: 'same-origin' }
+      );
+      const j = await r.json();
+      users = j.users || [];
+    } catch (e) {
+      console.warn('users_in_room failed', e);
+    }
+
+    const userItems = users.map(u => ({
+      id: u.id,
+      display: u.true_name?.trim() ? `${u.true_name} (${u.username})` : u.username,
+      avatar: u.avatar || null,
+      username: u.username
+    }));
+    initDropdown(userDropdown, userItems, 'Выберите исполнителя');
+  }
+}
+
+// перехватываем initTaskCreator, чтобы после него заполнять дропдауны
+(function attachMetaHook() {
+  const origInit = window.initTaskCreator || (async () => {});
+  window.initTaskCreator = async function () {
+    const res = await origInit.apply(this, arguments);
+    const panel = document.querySelector('#taskCreatorWrapper .tc-panel') 
+               || document.querySelector('.tc-panel'); // на всякий случай
+    if (panel) {
+      wireTaskMeta(panel);        // комнаты/исполнители
+      bindFileUploads(panel);
+     
+    }
+    return res;
+  };
+})();
+
+/* ======================= FILE DROP / UPLOAD ======================= */
+/* ======================= FILE DROP / UPLOAD (bind per panel) ======================= */
+
+// вызывать при каждом открытии панели
+function bindFileUploads(panelEl) {
+  // отцепим старое (если панель реюзается)
+  const oldZone = panelEl.querySelector('#fileDropZone');
+  const oldInput = panelEl.querySelector('#fileInput');
+
+  if (!oldZone || !oldInput) return;
+
+  // клонированием убираем старые слушатели
+  const newZone  = oldZone.cloneNode(true);
+  const newInput = oldInput.cloneNode(true);
+  oldZone.parentNode.replaceChild(newZone, oldZone);
+  oldInput.parentNode.replaceChild(newInput, oldInput);
+
+  const list = panelEl.querySelector('#uploadedFiles');
+
+  // клик по зоне -> открыть файловый диалог
+  newZone.addEventListener('click', () => newInput.click());
+
+  // выбор файлов через диалог
+  newInput.addEventListener('change', (e) => {
+    [...e.target.files].forEach(file => uploadFile(file, list));
+    newInput.value = '';
+  });
+
+  // drag-n-drop
+  newZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    newZone.classList.add('dragover');
+  });
+  newZone.addEventListener('dragleave', () => {
+    newZone.classList.remove('dragover');
+  });
+  newZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    newZone.classList.remove('dragover');
+    [...e.dataTransfer.files].forEach(file => uploadFile(file, list));
+  });
+
+  // кнопка "Создать задачу" — биндим тут, чтобы точно была в DOM
+  const btn = panelEl.querySelector('#createTaskBtn');
+  if (btn) {
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+
+    newBtn.addEventListener('click', async () => {
+      newBtn.disabled = true;
+      try {
+        const title = panelEl.querySelector('#taskTitle').value.trim();
+        const desc  = panelEl.querySelector('#taskDescription').innerHTML.trim();
+
+        const roomSel = panelEl.querySelector('#taskRoomDropdown .tc-dropdown-selected');
+        const userSel = panelEl.querySelector('#taskAssigneeDropdown .tc-dropdown-selected');
+
+        const roomId     = Number(roomSel?.dataset.value || 0);
+        const assigneeId = Number(userSel?.dataset.value || 0);
+
+        const prioEl = panelEl.querySelector('#prioRange');
+const priority = Math.max(0, Math.min(3, Math.round(parseFloat(prioEl?.value || '1'))));
+
+        const startAt  = panelEl.querySelector('#taskStart').value || '';
+        const dueAt    = panelEl.querySelector('#taskDue').value || '';
+
+        if (!title) return alert('Заполни заголовок');
+        if (!roomId) return alert('Выбери комнату');
+
+        if (uploadedFiles.length) await ensureBatch();
+
+        const fd = new FormData();
+        fd.append('title', title);
+        fd.append('description', desc);
+        fd.append('room_id', roomId);
+        if (assigneeId) fd.append('assignee_id', assigneeId);
+        fd.append('priority', priority);
+        if (startAt) fd.append('start_at', startAt);
+        if (dueAt)   fd.append('due_at',   dueAt);
+        if (currentBatchId) fd.append('batch_id', currentBatchId);
+
+        const res = await fetch('task-creator-handler.php?action=create_task', {
+          method: 'POST',
+          body: fd,
+          credentials: 'same-origin'
+        });
+        const j = await res.json();
+
+        if (!j.success) {
+          alert('Ошибка: ' + (j.error || 'create_task'));
+          return;
+        }
+
+        // успех — очистка локального состояния формы/списка файлов
+        currentBatchId = null;
+        batchPromise = null;
+        uploadedFiles = [];
+        if (list) list.innerHTML = '';
+        panelEl.querySelector('#taskTitle').value = '';
+        panelEl.querySelector('#taskDescription').innerHTML = '';
+
+        await showTaskSuccess(panelEl);
+      } catch (e) {
+        console.warn(e);
+        alert('Не удалось создать задачу');
+      } finally {
+        newBtn.disabled = false;
+      }
+    });
+  }
+}
+
+
+
+
+async function showTaskSuccess(panelEl) {
+  const body    = panelEl.querySelector('.tc-body');
+  const footer  = panelEl.querySelector('.tc-footer');
+  const success = panelEl.querySelector('#taskSuccess');
+  if (!success) { closeTaskCreator(); return; }
+
+  // плавно скрываем тело
+  body.classList.add('is-hiding');
+  await new Promise(r => setTimeout(r, 260)); // ждём анимацию
+  body.setAttribute('hidden', '');
+  if (footer) footer.setAttribute('hidden', '');
+
+  // показываем успех
+  success.removeAttribute('hidden');
+
+  // 2 секунды — и закрываем панель
+  await new Promise(r => setTimeout(r, 2000));
+  closeTaskCreator();
+
+  // сброс состояния для следующего открытия
+  success.setAttribute('hidden', '');
+  body.removeAttribute('hidden');
+  body.classList.remove('is-hiding');
+  if (footer) footer.removeAttribute('hidden');
+}
+
+
+
+
+
+
+
+
+
+// аплоад одного файла (вызывается bindFileUploads → uploadFile)
+async function uploadFile(file, listEl) {
+  try {
+    const batchId = await ensureBatch();
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('batch_id', batchId);
+
+    const res = await fetch('task-creator-handler.php?action=upload_file', {
+      method: 'POST',
+      body: formData,
+      credentials: 'same-origin'
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      uploadedFiles.push(data.file);
+      if (listEl) {
+        const li = document.createElement('li');
+        li.textContent = data.file.name;
+        listEl.appendChild(li);
+      }
+    } else {
+      alert('Ошибка: ' + (data.error || 'upload_file'));
+    }
+  } catch (e) {
+    console.warn(e);
+    alert('Не удалось загрузить файл');
+  }
+}
+

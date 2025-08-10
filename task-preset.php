@@ -11,7 +11,15 @@
     </div>
   </header>
 
-  <!-- BODY -->
+
+  <section class="forscroll">
+<div id="taskSuccess" class="success-animation" hidden aria-live="polite">
+  <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+  </svg>
+  <p>Задача успешно поставлена!</p>
+</div>
   <section class="tc-body">
     <!-- ISO даты для JS -->
     <input id="taskStart" type="hidden" />
@@ -21,14 +29,24 @@
       <label class="tc-field">
         <span class="tc-label">Комната</span>
         <div class="tc-inputwrap">
-          <select id="taskRoom" class="meta-control custom-select tc-input"></select>
+          <div class="tc-inputwrap tc-inputwrap--dd">
+  <div class="tc-dropdown" id="taskRoomDropdown">
+    <div class="tc-dropdown-selected" data-value="">Выберите комнату</div>
+    <ul class="tc-dropdown-list"></ul>
+  </div>
+</div>
         </div>
       </label>
 
       <label class="tc-field">
         <span class="tc-label">Исполнитель</span>
         <div class="tc-inputwrap">
-          <select id="taskAssignee" class="meta-control custom-select tc-input"></select>
+         <div class="tc-inputwrap tc-inputwrap--dd">
+  <div class="tc-dropdown" id="taskAssigneeDropdown">
+    <div class="tc-dropdown-selected" data-value="">Выберите исполнителя</div>
+    <ul class="tc-dropdown-list"></ul>
+  </div>
+</div>
         </div>
       </label>
 
@@ -64,8 +82,17 @@
     <label class="tc-label" style="margin-top:8px">Описание</label>
     <div id="taskDescription" class="task-desc tc-desc" contenteditable="true"
          data-placeholder="Расскажите, что нужно сделать…"></div>
-  </section>
 
+ <div id="fileDropZone" class="tc-file-drop">
+  <p>Перетащите файлы сюда или нажмите для выбора</p>
+  <input type="file" id="fileInput" multiple hidden>
+</div>
+<ul id="uploadedFiles"></ul>
+
+
+  </section>
+</section>
+ 
   <!-- FOOTER -->
 
   

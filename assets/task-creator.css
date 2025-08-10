@@ -537,6 +537,361 @@ color: #fff !important;
 
 
 
+.tc-dropdown {
+  position: relative;
+  width: 100%;
+  font-size: 0.9vw;
+  color: #fff;
+  user-select: none;
+}
+
+.tc-dropdown-selected {
+  background: #1a1d24;
+  border: 0.1vw solid #3a3f4b;
+  padding: 0.5vw 1vw;
+  border-radius: 0.4vw;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.tc-dropdown-selected:hover {
+  border-color: #4db5ff;
+}
+
+.tc-dropdown-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #1a1d24;
+  border: 0.1vw solid #3a3f4b;
+  border-radius: 0.4vw;
+  margin-top: 0.2vw;
+  list-style: none;
+  padding: 0;
+  z-index: 10;
+}
+
+.tc-dropdown-list li {
+  padding: 0.5vw 1vw;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tc-dropdown-list li:hover {
+  background: #4db5ff;
+}
+
+
+
+/* ===== Dropdown (вписывается в tc-input) ===== */
+#taskCreatorWrapper .tc-dropdown{
+  position: relative;
+  width: 100%;
+  font-size: .95rem;
+  color: var(--white);
+}
+
+/* «Кнопка» как .tc-input */
+#taskCreatorWrapper .tc-dropdown-selected{
+  padding:11px 38px 11px 13px;  /* как у .tc-input + место под стрелку */
+  border-radius:12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid #ffffff14;
+  cursor:pointer;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+}
+#taskCreatorWrapper .tc-dropdown-selected:hover{
+  background:rgba(255,255,255,.05);
+  border-color:#ffffff26;
+}
+#taskCreatorWrapper .tc-dropdown-selected:focus{
+  outline:none;
+  border-color:#3f89ff;
+  box-shadow:0 0 0 3px rgba(76,131,255,.18);
+}
+
+/* Стрелка (та же, что у select), но подвяжем к дропдауну */
+#taskCreatorWrapper .tc-inputwrap.tc-inputwrap--dd::after{
+  content:"\f107";
+  font-family:"Font Awesome 5 Free"; font-weight:900;
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  color:#8ea3c9; pointer-events:none; font-size:.86rem;
+  transition: transform .2s ease, color .2s ease;
+}
+#taskCreatorWrapper .tc-inputwrap.tc-inputwrap--dd .tc-dropdown.is-open ~ /*noop*/ ._noop{} /* фиктивный селектор для специфичности */
+#taskCreatorWrapper .tc-inputwrap.tc-inputwrap--dd.is-open::after{
+  transform:translateY(-50%) rotate(180deg);
+  color:#cfe0ff;
+}
+
+/* Выпадающий список */
+#taskCreatorWrapper .tc-dropdown-list{
+  display:none;
+  position:absolute; top:calc(100% + 6px); left:0; width:100%;
+  border-radius:12px;
+  background:
+    radial-gradient(120% 70% at 20% -10%, #1a2440ee 0%, #0c162fee 70%),
+    linear-gradient(135deg, #122039, #0e1a2f);
+  border:1px solid #ffffff14;
+  box-shadow:0 20px 50px rgba(0,0,0,.45);
+  list-style:none; margin:0; padding:6px;
+  z-index: 60;      /* выше контента формы */
+  max-height: 260px;
+  overflow: auto;
+}
+
+/* Скролл в списке — как у tc-body */
+#taskCreatorWrapper .tc-dropdown-list::-webkit-scrollbar{ width:10px; }
+#taskCreatorWrapper .tc-dropdown-list::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#ffffff1b,#ffffff10);
+  border-radius:10px; border:1px solid #ffffff14;
+}
+#taskCreatorWrapper .tc-dropdown-list::-webkit-scrollbar-track{ background:transparent; }
+
+/* Пункты списка */
+#taskCreatorWrapper .tc-dropdown-list li{
+  padding:9px 10px;
+  border-radius:10px;
+  color:#cddaf5;
+  cursor:pointer;
+  transition: background .16s ease, color .16s ease, transform .12s ease;
+}
+#taskCreatorWrapper .tc-dropdown-list li:hover{
+  background:rgba(255,255,255,.07);
+  color:#fff;
+}
+
+/* Активный/выбранный пункт — мягкий акцент */
+#taskCreatorWrapper .tc-dropdown-list li.is-selected{
+  background:var(--accentBg);
+  color:#fff;
+  border:1px solid color-mix(in oklab, var(--accent1) 25%, #ffffff00);
+}
+
+/* Состояния */
+#taskCreatorWrapper .tc-dropdown.is-open .tc-dropdown-selected{
+  border-color:#3f89ff;
+  box-shadow:0 0 0 3px rgba(76,131,255,.18);
+}
+#taskCreatorWrapper .tc-dropdown.is-disabled .tc-dropdown-selected{
+  opacity:.6; cursor:not-allowed;
+}
+
+/* Если используешь .tc-inputwrap -> добавь модификатор чтобы крутить стрелку */
+#taskCreatorWrapper .tc-inputwrap.tc-inputwrap--dd{ position:relative; }
+
+
+#taskCreatorWrapper .tc-dropdown-list li{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+#taskCreatorWrapper .tc-dropdown .dd-ava{
+  width:20px; height:20px; border-radius:50%;
+  object-fit:cover; flex-shrink:0;
+}
+
+#taskCreatorWrapper .tc-dropdown .dd-dot{
+  width:14px; height:14px; border-radius:4px; flex-shrink:0;
+  box-shadow:0 0 0 1px #ffffff1a inset;
+}
+
+#taskCreatorWrapper .tc-dropdown .dd-text{
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+
+
+#taskCreatorWrapper .tc-dropdown-selected{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* размеры для иконок внутри выбранного значения */
+#taskCreatorWrapper .tc-dropdown-selected .dd-ava{
+  width:18px; height:18px; border-radius:50%;
+  object-fit:cover; flex-shrink:0;
+}
+#taskCreatorWrapper .tc-dropdown-selected .dd-dot{
+  width:12px; height:12px; border-radius:4px; flex-shrink:0;
+  box-shadow:0 0 0 1px #ffffff1a inset;
+}
+#taskCreatorWrapper .tc-dropdown-selected .dd-text{
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+
+
+
+
+
+
+
+
+#taskCreatorWrapper .tc-inputwrap--dd .tc-dropdown { position: relative; }
+#taskCreatorWrapper .tc-inputwrap--dd .tc-dropdown-selected {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.03);
+  border:1px solid #ffffff14; border-radius:12px; padding:11px 13px; cursor:pointer;
+}
+#taskCreatorWrapper .tc-inputwrap--dd .tc-dropdown.is-open .tc-dropdown-selected {
+  border-color:#3f89ff; box-shadow:0 0 0 3px rgba(76,131,255,.18);
+}
+#taskCreatorWrapper .tc-inputwrap--dd .tc-dropdown-list {
+  position:absolute; left:0; top:calc(100% + 6px); width:100%;
+  background: #0f1623; border:1px solid #ffffff14; border-radius:12px; padding:6px 0;
+  list-style:none; margin:0; display:none; z-index: 9999;
+}
+#taskCreatorWrapper .tc-inputwrap--dd .tc-dropdown-list li {
+  display:flex; align-items:center; gap:8px; padding:8px 12px; cursor:pointer;
+}
+#taskCreatorWrapper .tc-inputwrap--dd .tc-dropdown-list li:hover {
+  background: rgba(255,255,255,.06);
+}
+#taskCreatorWrapper .tc-inputwrap--dd .dd-ava {
+  width:22px; height:22px; border-radius:50%; object-fit:cover; flex: 0 0 22px;
+}
+#taskCreatorWrapper .tc-inputwrap--dd .dd-dot {
+  width:12px; height:12px; border-radius:50%; display:inline-block; flex: 0 0 12px;
+}
+#taskCreatorWrapper .tc-file-drop{
+  margin-top:14px; padding:16px; border:1px dashed #3a3f4b; border-radius:12px;
+  background:rgba(255,255,255,.03); text-align:center; cursor:pointer;
+}
+#taskCreatorWrapper .tc-file-drop.dragover{ border-color:#3f89ff; background:rgba(76,131,255,.06); }
+#taskCreatorWrapper #uploadedFiles{ margin-top:10px; padding-left:0; list-style:none; }
+#taskCreatorWrapper #uploadedFiles .tc-file-item{
+  display:flex; align-items:center; gap:10px; padding:6px 8px; border:1px solid #ffffff14; border-radius:10px; margin-top:6px;
+}
+#taskCreatorWrapper #uploadedFiles .tc-file-item .name{ flex:1; color:#e9f3ff; }
+#taskCreatorWrapper #uploadedFiles .tc-file-item .open{ text-decoration:underline; }
+#taskCreatorWrapper #uploadedFiles .tc-file-item .remove{
+  border:none; background:rgba(255,255,255,.08); color:#fff; border-radius:8px; width:28px; height:28px; cursor:pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.success-animation { margin:150px auto;}
+
+.checkmark {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #3db4f1;
+    stroke-miterlimit: 10;
+    box-shadow: inset 0px 0px 0px #2a74ec;
+    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    position:relative;
+    top: 5px;
+    right: 5px;
+    margin: 0 auto;
+}
+.checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #3db4f1;
+    fill: #0b121e;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+    0%, 100% {
+        transform: none;
+    }
+
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px #4bb71b;
+    }
+}
+
+
+
+
+.success-animation[hidden] { display: none; } 
+
+
+.tc-body.is-hiding {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.success-animation {
+    display: flex
+;
+    color: #3db4f1;
+    font-size: 20px;
+    gap: 25px;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.success-animation p {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInText 0.5s ease forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInText {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.forscroll {
+  overflow: auto;
+
+}
+
+
+
+.forscroll::-webkit-scrollbar{ height:8px; width:6px; }
+.forscroll::-webkit-scrollbar-thumb{
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  border-radius: 10px; border: 2px solid rgba(14,20,36,.8);
+}
+
 
 /* ================= Mobile ================= */
 @media (max-width:768px){
