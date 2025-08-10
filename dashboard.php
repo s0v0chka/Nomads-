@@ -259,9 +259,15 @@ foreach ($rooms as $room) {
 
 
 
+<!-- CONFIRM + FIRE (one-drop snippet) -->
 
 
-            <div id="taskCreatorWrapper"></div>
+
+
+
+
+           <div class="tc-overlay" onclick="closeTaskCreator()"></div>
+
 
 
 

@@ -1,149 +1,542 @@
-.fp-clear-btn {
-    position: absolute;
-    right: 1vw;
-    width: 4vw;
-    height: 2vw;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    top: -2.0vw;
-    background-color: #ffffff;
-    border: none;
-    border-radius: 0.5vw 0.5vw 0vw 0vw;
-    color: red;
-    cursor: pointer;
-    font-size: 29px;
-    z-index: -1;
-}
-
-.fp-clear-btn:hover {
-  color: #333;
-}
-
-
-
-/**************** ПАНЕЛЬ *****************/
+/* ================= CORE: wrapper + overlay + RIGHT drawer ================= */
 #taskCreatorWrapper{
-  position:fixed;top:0;right:-100%;width:520px;height:100%;
-  background:rgba(13,27,42,.93);backdrop-filter:var(--glass);
-  border-left:1px solid var(--border);box-shadow:-4px 0 30px #000b;
-  transition:right .4s cubic-bezier(.4,0,.2,1);z-index:999;
-  overflow-y:auto;padding:42px 48px;
+  position:fixed; inset:0; z-index:9998; pointer-events:none;
+  contain:layout style paint;
 }
-#taskCreatorWrapper.task-slide-in{right:0}
+#taskCreatorWrapper *{ box-sizing:border-box; }
 
-/**************** ФОРМА *****************/
-.task-editor{display:flex;flex-direction:column;color:var(--txt);}
-.task-editor__header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-
-.task-title{
-  flex:1;font-size:1.35rem;font-weight:700;padding:10px 0;
-  background:transparent;border:none;color:var(--white);outline:none;
-  border-bottom:2px solid transparent;transition:border .25s;
+#taskCreatorWrapper .tc-overlay{
+  position:absolute; inset:0; z-index:0;
+  background:rgba(0,6,16,.56); backdrop-filter:blur(6px);
+  opacity:0; transition:opacity .35s var(--transition);
 }
-.task-title:focus{border-color:var(--neon1);}
 
-.task-editor__close{
-  background:none;border:none;font-size:30px;line-height:1;
-  color:var(--txt-dim);cursor:pointer;transition:color .2s,transform .2s;
-}
-.task-editor__close:hover{color:#ff5f5f;transform:scale(1.15)}
+/* Панель справа — спокойнее фон, без неона */
+#taskCreatorWrapper .tc-panel.tc-panel--right{
+  position:absolute; right:0; top:0; height:100%; z-index:1;
+  width:min(720px,94vw);
+  display:grid; grid-template-rows:auto 1fr auto; overflow:hidden;
 
-/* meta-grid */
-.task-meta{display:grid;grid-template-columns:120px 1fr;row-gap:12px;column-gap:24px}
-.meta-row{display:contents}
-.meta-label{font-size:.82rem;color:var(--txt-dim);padding-top:6px}
-.meta-control{
-  width:100%;padding:9px 12px;border:1px solid var(--border);
-  border-radius:10px;background:rgba(255,255,255,.04);
-  color:var(--white);font-size:.9rem;outline:none;transition:border .2s,background .2s;
+  /* фон */
+  background: linear-gradient(180deg, rgba(13,19,33,.97), rgba(10,16,28,.97));
+  border-left:1px solid #ffffff14;
+  box-shadow:-26px 0 60px rgba(0,0,0,.50);
+
+  /* плавный выезд */
+  transform:translateX(110%); will-change:transform;
+  transition:transform .44s cubic-bezier(.22,.61,.36,1);
+
+  /* акцентные переменные (меняются по data-priority) */
+  --accent1: var(--neon1);
+  --accent2: var(--neon2);
+  --accentBg: rgba(76,131,255,.16);
 }
-.meta-control:focus{border-color:var(--neon1);background:rgba(255,255,255,.07)}
+#taskCreatorWrapper .tc-panel.tc-panel--left{
+  position:absolute; left:0; top:0; height:100%;
+  transform: translateX(-110%);
+  transition: transform .44s cubic-bezier(.22,.61,.36,1);
+}
+#taskCreatorWrapper.task-slide-in .tc-panel.tc-panel--left{
+  transform: translateX(0);
+}
+
+#taskCreatorWrapper.task-slide-in{ pointer-events:auto; }
+#taskCreatorWrapper.task-slide-in .tc-overlay{ opacity:1; }
+#taskCreatorWrapper.task-slide-in .tc-panel{ transform:translateX(0); }
+
+/* убираем боковой неон и глоу полностью */
+#taskCreatorWrapper .tc-rail--right,
+#taskCreatorWrapper .tc-glow,
+#taskCreatorWrapper .tc-panel.tc-panel--right::before{ display:none !important; }
+
+/* ================= HEADER / BODY / FOOTER ================= */
+#taskCreatorWrapper .tc-header{
+  position:sticky; top:0; z-index:2;
+  display:flex; align-items:center; gap:12px;
+  padding:16px 20px; border-bottom:1px solid #ffffff12;
+  background:linear-gradient(180deg, rgba(15,22,35,.98), rgba(12,18,31,.98));
+  backdrop-filter:var(--glass);
+}
+#taskCreatorWrapper .tc-titlewrap{ display:flex; align-items:center; gap:12px; flex:1; }
+#taskCreatorWrapper .tc-titleicon{
+  width:36px;height:36px;border-radius:10px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  color:#0b1426;
+  box-shadow:0 4px 14px rgba(0,0,0,.28);
+  transition: background .35s ease, box-shadow .35s ease, filter .35s ease;
+}
+#taskCreatorWrapper .tc-title{
+  flex:1; padding:12px 14px; border-radius:12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid #ffffff14;
+  font-size:1rem; outline:none;
+}
+#taskCreatorWrapper .tc-close{
+  margin-left:auto; width:40px;height:40px;
+  border:none;border-radius:12px; cursor:pointer;
+  background:rgba(255,255,255,.08); color:#fff; font-size:1.4rem; line-height:1;
+  transition:transform .18s, background .2s;
+}
+#taskCreatorWrapper .tc-close:hover{ transform:scale(1.06); background:rgba(255,255,255,.12); }
+
+#taskCreatorWrapper .tc-body{ padding:20px 22px; overflow:auto; position:relative; animation:tcFade .4s ease; }
+@keyframes tcFade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+
+#taskCreatorWrapper .tc-footer{
+  position:sticky; bottom:0; display:flex; gap:10px;
+  padding:14px 20px 18px; border-top:1px solid #ffffff12;
+  background:linear-gradient(180deg, rgba(15,22,35,.98), rgba(12,18,31,.98));
+}
+
+/* ================= FIELDS / GRID ================= */
+#taskCreatorWrapper .tc-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px 16px; }
+#taskCreatorWrapper .tc-field{ display:flex; flex-direction:column; gap:8px; }
+#taskCreatorWrapper .tc-field--full{ grid-column:1 / -1; border: none;}
+#taskCreatorWrapper .tc-label{ color:var(--txt-dim); font-size:.9rem; font-weight:600; letter-spacing:.2px; }
+
+#taskCreatorWrapper .tc-input{
+  padding:11px 13px; border-radius:12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid #ffffff14; color:var(--white);
+  outline:none;
+  transition:border-color .2s, background .2s, box-shadow .2s;
+}
+#taskCreatorWrapper .tc-input::placeholder{ color:var(--txt-dim); }
+#taskCreatorWrapper .tc-input:focus{
+  border-color:#3f89ff;
+  box-shadow:0 0 0 3px rgba(76,131,255,.18);
+}
+
+#taskCreatorWrapper .tc-inputwrap{ position:relative; }
+#taskCreatorWrapper .custom-select{ padding-right:40px; appearance:none; }
+#taskCreatorWrapper .tc-inputwrap::after{
+  content:"\f107"; font-family:"Font Awesome 5 Free"; font-weight:900;
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  color:#8ea3c9; pointer-events:none; font-size:.86rem;
+}
+
+/* date button */
+#taskCreatorWrapper .tc-datebtn{
+  display:flex; align-items:center; gap:10px; height:44px;
+  text-align:left; cursor:pointer;
+}
+#taskCreatorWrapper .tc-datebtn:hover{ background:rgba(255,255,255,.07); }
+#taskCreatorWrapper #dateDisplayText.due-today{ color:var(--neon1); }
+#taskCreatorWrapper #dateDisplayText.due-range{ color:var(--txt); }
+#taskCreatorWrapper #dateDisplayText.due-past{ color:#ff6b6b; }
 
 /* description */
-.task-desc{
-  margin-top:8px;background:rgba(255,255,255,.04);
-  min-height:140px;padding:12px 14px;border-radius:12px;
-  border:1px solid var(--border);color:var(--white);
-  line-height:1.45;font-size:.92rem;outline:none;
+#taskCreatorWrapper .tc-desc{
+  min-height:180px; border-radius:12px; margin-top:8px; padding: 9px;
+  background:rgba(255,255,255,.03);
+  border:1px solid #ffffff14;
 }
-.task-desc:empty:before{
-  content:attr(data-placeholder);color:var(--txt-dim)
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  pointer-events: none !important;
+ /* чтобы визуально было понятно, что он неактивен */
+  cursor: default !important;
 }
-
-/* кнопка */
-.task-save-btn{
-  margin-top:26px;padding:13px 0;border:none;border-radius:14px;
-  background:linear-gradient(135deg,var(--neon1),var(--neon2));
-  color:#fff;font-size:.9rem;font-weight:700;cursor:pointer;
-  box-shadow:0 0 20px rgba(42,250,223,.32);transition:transform .25s,box-shadow .25s;
-}
-.task-save-btn i{margin-right:6px}
-.task-save-btn:hover{transform:translateY(-2px);box-shadow:0 0 26px rgba(76,131,255,.35)}
-
-
-/* ─── кастомный SELECT ───────────────────────── */
-.custom-select{
-  appearance:none;-moz-appearance:none;-webkit-appearance:none;
-  background:var(--bg1) url("data:image/svg+xml,%3csvg fill='%23d7e9ff' height='10' width='10' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3e%3cpolygon points='6,8 0,0 12,0'/%3e%3c/svg%3e") no-repeat right 14px center/10px;
-  padding-right:42px;cursor:pointer;
+.flatpickr-current-month .flatpickr-monthDropdown-months{
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background: none !important;
+  background-image: none !important;
+  border: none !important;
+  padding-right: 0 !important;
+  cursor: default !important;     /* опционально */
 }
 
-.custom-select:focus{border-color:var(--neon1)}
-
-/* ─── умная дата ─────────────────────────────── */
-.custom-date{cursor:pointer}
-
-.due-today  {color:#33e4b0;font-weight:700}
-.due-past  {color:#ff6565;font-weight:700}
-.due-range {color:var(--neon2);font-weight:700}
-
-/* красивый calendar от flatpickr вписываем в тему */
-.flatpickr-calendar{
-  background:var(--bg1);border:1px solid var(--border);border-radius:14px;
-  color:var(--white);box-shadow:0 8px 32px rgba(0,0,0,.45);
+/* В IE/Edge-legacy прячем внутреннюю стрелку */
+.flatpickr-current-month .flatpickr-monthDropdown-months::-ms-expand{
+  display: none !important;
 }
-.flatpickr-month{color:var(--white)}
-.flatpickr-day{border-radius:8px}
-.flatpickr-day.flatpickr-disabled{color:#555}
-.flatpickr-day.today      {background:var(--neon1);color:#000}
-.flatpickr-day.selected,
-.flatpickr-day.startRange,
-.flatpickr-day.endRange  {background:var(--neon2);color:#fff}
-.flatpickr-day.inRange   {background:rgba(76,131,255,.25)}
-
-.date-display{
-  flex:1;min-width:0;padding:9px 14px;border-radius:10px;
-  display:flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,.04);border:1px dashed var(--border);
-  color:var(--txt-dim);cursor:pointer;transition:.25s;
+#taskCreatorWrapper .tc-desc:focus{
+  border-color:#3f89ff; box-shadow:0 0 0 3px rgba(76,131,255,.18);
 }
-.date-display:hover{background:rgba(255,255,255,.06)}
-.date-display.active{border-style:solid;border-color:var(--neon1)}
-
-.due-today {color:#33e4b0;font-weight:700}
-.due-past  {color:#ff6565;font-weight:700}
-.due-range {color:var(--neon2);font-weight:700}
-
-/* ── кастом-header календаря ───────── */
-.fp-header{
-  display:flex;gap:4px;padding:4px 4px 8px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:4px;
+#taskCreatorWrapper .tc-desc:empty:before{ content:attr(data-placeholder); color:var(--txt-dim); }
+.flatpickr-calendar.open {
+    display: inline-block;
+    margin-top: 67px;
+    margin-left: 15px;
+    z-index: 99999;
 }
-.fp-tab{
-  flex:1;padding:6px 8px;font-size:.82rem;border-radius:6px;
-  background:none;border:1px dashed var(--border);cursor:pointer;
-  color:var(--txt-dim);transition:.2s;
+.flatpickr-calendar:after {
+    border-width: 11px !important;
+    margin: 0 -4px;
+    border-bottom-color:rgba(255, 255, 255, .03) !important;
 }
-.fp-tab.active{
-  background:var(--neon1);border-style:solid;border-color:transparent;
-  color:#011;font-weight:600;
+.flatpickr-calendar:before {
+    border-width: 11px !important;
+   border-bottom-color: rgba(255, 255, 255, .03) !important;
+    margin: 0 -4px;
+}
+/* ================= BUTTONS ================= */
+#taskCreatorWrapper .tc-primary{
+  flex:1;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  color:#fff;
+  font-weight:800;
+  font-size:.98rem;
+  letter-spacing:.2px;
+  display:flex;
+  position: relative;
+  z-index: 10;
+  align-items:center;
+  padding: 10px;
+  justify-content:center;
+  gap:10px;
+  box-shadow:0 6px 16px rgba(0,0,0,.28);
+  transition: background .35s ease, transform .16s ease, box-shadow .16s ease;
+}
+#taskCreatorWrapper .tc-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 14px 30px rgba(0,0,0,.42);
+}
+#taskCreatorWrapper .tc-ghost{
+  padding:12px 16px; border-radius:12px; background:rgba(255,255,255,.06);
+  color:var(--txt); border:1px solid #ffffff14; cursor:pointer; font-weight:600;
+  transition:background .2s, border-color .2s;
+}
+#taskCreatorWrapper .tc-ghost:hover{ background:rgba(255,255,255,.1); border-color:#ffffff26; }
+
+/* ================= PRIORITY (спокойные сегменты) ================= */
+#taskCreatorWrapper .tc-priority{
+  display:flex; gap:8px; padding:8px;
+  background:rgba(255,255,255,.03);
+  border:1px solid #ffffff14; border-radius:12px;
+}
+#taskCreatorWrapper .tc-priority input{ position:absolute; opacity:0; pointer-events:none; }
+#taskCreatorWrapper .tc-priority label{
+  position:relative; flex:1; text-align:center;
+  padding:10px 12px 10px 28px; border-radius:10px; cursor:pointer;
+  font-size:.9rem; color:#cbd6ef; border:1px solid transparent;
+  transition:background .2s, border-color .2s, color .2s;
+}
+#taskCreatorWrapper .tc-priority label::before{
+  content:""; position:absolute; left:10px; top:50%; transform:translateY(-50%);
+  width:8px;height:8px;border-radius:50%; background:#7a8aa7;
+}
+#taskCreatorWrapper .tc-priority label[data-tone="low"]::before{ background:#22c55e; }
+#taskCreatorWrapper .tc-priority label[data-tone="normal"]::before{ background:#4c83ff; }
+#taskCreatorWrapper .tc-priority label[data-tone="high"]::before{ background:#f59e0b; }
+#taskCreatorWrapper .tc-priority label[data-tone="urgent"]::before{ background:#ff4d6d; }
+
+/* выбранные — мягкие оттенки без «светошоу» */
+#prio-low:checked    + label[data-tone="low"]    { background:rgba(34,197,94,.16);  color:#eafff3;  border-color:rgba(34,197,94,.35); }
+#prio-normal:checked + label[data-tone="normal"] { background:rgba(76,131,255,.16); color:#eef3ff;  border-color:rgba(76,131,255,.35); }
+#prio-high:checked   + label[data-tone="high"]   { background:rgba(245,158,11,.18); color:#fff4e3;  border-color:rgba(245,158,11,.38); }
+#prio-urgent:checked + label[data-tone="urgent"] { background:rgba(255,77,109,.20); color:#ffeef2;  border-color:rgba(255,77,109,.40); }
+
+/* === акценты панели от выбранного приоритета (для плавного перекраса) === */
+#taskCreatorWrapper .tc-panel[data-priority="low"]{
+  --accent1:#22c55e; --accent2:#2dd4bf; --accentBg:rgba(34,197,94,.16);
+}
+#taskCreatorWrapper .tc-panel[data-priority="normal"]{
+  --accent1:var(--neon1); --accent2:var(--neon2); --accentBg:rgba(76,131,255,.16);
+}
+#taskCreatorWrapper .tc-panel[data-priority="high"]{
+  --accent1:#f5be0bff; --accent2:#fa4d0eff; --accentBg:rgba(245,158,11,.18);
+}
+#taskCreatorWrapper .tc-panel[data-priority="urgent"]{
+  --accent1:#ff2e55ff; --accent2:#f70b0bff; --accentBg:rgba(255,77,109,.20);
 }
 
-.fp-anchor{
+/* ================= FLATPICKR (оставляем твою тему, чуть меньше) ================= */
+.flatpickr-calendar.tc-flatpickr{
+  border-radius:12px;
+  background:
+    radial-gradient(120% 70% at 20% -10%, #1a2440ee 0%, #0c162fee 70%),
+    linear-gradient(135deg, #122039, #0e1a2f);
+  border:1px solid #ffffff14; color:#e9f3ff;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  transform:scale(.95);
+  transform-origin: top left;
+}
+.flatpickr-calendar.tc-flatpickr .flatpickr-months{ border-bottom:1px solid #ffffff14; padding:6px 2px; }
+.flatpickr-calendar.tc-flatpickr .flatpickr-current-month .cur-month,
+.flatpickr-calendar.tc-flatpickr .flatpickr-current-month .numInputWrapper input{ color:#e9f3ff; font-weight:700; letter-spacing:.2px; }
+.flatpickr-calendar.tc-flatpickr .flatpickr-weekdays{ background:transparent; }
+.flatpickr-calendar.tc-flatpickr span.flatpickr-weekday{ color:#9ab0d8; font-weight:600; letter-spacing:.3px; }
+.flatpickr-calendar.tc-flatpickr .flatpickr-day{
+  border:none; border-radius:8px; height:34px; line-height:34px; color:#cddaf5;
+}
+.flatpickr-current-month {
+color: #fff !important;
+
+}
+
+
+
+.flatpickr-months .flatpickr-prev-month.flatpickr-next-month, .flatpickr-months .flatpickr-next-month.flatpickr-next-month {
+    right: 12px !important;
+    top: 55px;
+    display: flex
+;
+    justify-content: center;
+    border-radius: 33px;
+    background: linear-gradient(135deg, var(--neon1), var(--neon2));
+}
+.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month, .flatpickr-months .flatpickr-next-month.flatpickr-prev-month {
+  
+       left: 12px !important;
+    top: 55px;
+    display: flex
+;
+    justify-content: center;
+    border-radius: 33px;
+    background: linear-gradient(135deg, var(--neon1), var(--neon2));
+}
+.flatpickr-calendar.tc-flatpickr .flatpickr-day:hover{ background:rgba(255,255,255,.1); color:#fff; }
+.flatpickr-calendar.tc-flatpickr .flatpickr-day.today{ border:1px solid var(--neon1); color:#fff; }
+.flatpickr-calendar.tc-flatpickr .flatpickr-day.selected,
+.flatpickr-calendar.tc-flatpickr .flatpickr-day.startRange,
+.flatpickr-calendar.tc-flatpickr .flatpickr-day.endRange{
+  background:linear-gradient(135deg,var(--neon1),var(--neon2)); color:#071222; box-shadow:0 0 0 1px #ffffff22 inset;
+}
+.flatpickr-calendar.tc-flatpickr .flatpickr-day.inRange{
+  background:linear-gradient(135deg,#1e2a43,#152237); color:#eaf1ff;
+  box-shadow: -5px 0 0 #1a2339, 5px 0 0 #1a2339;
+}
+.flatpickr-calendar.tc-flatpickr .flatpickr-prev-month,
+.flatpickr-calendar.tc-flatpickr .flatpickr-next-month{ fill:#cbd7f3; color:#cbd7f3; opacity:.9; }
+.flatpickr-calendar.tc-flatpickr .flatpickr-prev-month:hover,
+.flatpickr-calendar.tc-flatpickr .flatpickr-next-month:hover{ opacity:1; }
+
+/* кастомные табы */
+.flatpickr-calendar.tc-flatpickr .fp-header{
+  display:flex; gap:8px; padding:8px 10px; border-bottom:1px solid #ffffff14; justify-content: center;
+  background:rgba(255,255,255,.03);
+}
+.flatpickr-calendar.tc-flatpickr .fp-tab{
+  padding:7px 10px; font-size:.86rem; border-radius:8px; border:1px solid #ffffff14;
+  background:rgba(255,255,255,.05); color:#cddaf5; cursor:pointer;
+}
+.flatpickr-calendar.tc-flatpickr .fp-tab:hover{ background:#ffffff0a; color:#fff; }
+.flatpickr-calendar.tc-flatpickr .fp-tab.active{
+  background:linear-gradient(135deg,var(--neon1),var(--neon2)); color:#071222; border-color:transparent;
+}
+
+/* ================= Scrollbar ================= */
+#taskCreatorWrapper .tc-body::-webkit-scrollbar{ width:10px; }
+#taskCreatorWrapper .tc-body::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#ffffff1b,#ffffff10);
+  border-radius:10px; border:1px solid #ffffff14;
+}
+#taskCreatorWrapper .tc-body::-webkit-scrollbar-track{ background:transparent; }
+.flatpickr-calendar.tc-flatpickr .flatpickr-prev-month, .flatpickr-calendar.tc-flatpickr .flatpickr-next-month {
+    fill: #ffffff;
+    color: #ffffff;
+    opacity: 1;
+    scale: 0.7;
+}
+
+
+.flatpickr-calendar.open {
+    display: inline-block;
+
+    z-index: 99999;
+}
+
+
+/* скрываем технические элементы, если вдруг остались */
+#taskCreatorWrapper .tc-priority-select{ display:none !important; }
+#taskCreatorWrapper .fp-anchor {
+  position:absolute!important;
+  left:0!important;
+  width:1px;
+  height:1px;
+  opacity:0;
+}
+
+
+
+
+
+
+
+
+
+/* ===== FIRE ABOVE PRIMARY CTA ===== */
+#taskCreatorWrapper .tc-primary-wrap{
+  position:relative;
+  display:flex;
+  align-items:flex-end;
+}
+
+/* Контейнер пламени — по умолчанию скрыт */
+#taskCreatorWrapper .tc-fire{
+  --fireColor1:#ff5000;
+  --fireColor2:rgba(255, 34, 0, 0.264);
+  --fireDuration:1s;
+  --fireBlur:3.9px;
+  --fireSize: 44px;
   position:absolute;
-  width:0;height:0;
-  border:0;padding:0;margin:0;
-  opacity:0;pointer-events:none;
+  left: 35%;
+  transform:translateX(-50%);
+  bottom: -22px;             /* прямо над кнопкой */
+  width:10em;
+  z-index: 1;
+  height:2em;
+  filter:blur(var(--fireBlur));
+  pointer-events:none;
+  mix-blend-mode:screen;
+  display:none;                          /* показываем только на high */
+  z-index:1;
+}
+
+/* Частицы */
+#taskCreatorWrapper .tc-fire .particle{
+  animation: tcFireRise var(--fireDuration) ease-in infinite;
+  background-image: radial-gradient(var(--fireColor1) 30%, var(--fireColor2) 70%);
+  border-radius:50%;
+  opacity:0;
+  position:absolute;
+  bottom:0;
+  width:var(--fireSize);
+  height:var(--fireSize);
+}
+
+/* Включаем огонь только при приоритете high */
+#taskCreatorWrapper .tc-panel[data-priority="high"] .tc-fire,
+#taskCreatorWrapper .tc-panel[data-priority="urgent"] .tc-fire{
+  display:block;
+}
+#taskCreatorWrapper .tc-panel[data-priority="urgent"] .tc-fire{
+  --fireColor1:#ff3b00;                 
+  --fireColor2:rgba(151, 5, 0, 0.767);
+  --fireDuration:.8s;                
+  --fireBlur:3px;
+  --fireSize:50px;                      
+  --rise:-8em;                     
+  bottom:-22px;
+}
+/* Анимация огня */
+@keyframes tcFireRise{
+  from{opacity:0; transform:translateY(0) scale(1);}
+  25%{opacity:1;}
+  to{opacity:0; transform:translateY(var(--rise, -8em)) scale(0);}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== Priority slider ===== */
+#taskCreatorWrapper .tc-prio-slider{
+  margin-top:10px;
+  padding:10px 6px 0;
+}
+
+#taskCreatorWrapper #prioRange{
+  width:100%;
+  appearance:none;
+  height:8px;
+  border-radius:999px;
+  /* Разделяем фоны, чтобы анимировать background-size */
+  background-image:
+    linear-gradient(90deg, var(--accent1), var(--accent2)),
+    linear-gradient(#ffffff1a,#ffffff1a);
+  background-repeat: no-repeat, no-repeat;
+  background-position: 0 0, 0 0;
+  background-size: calc(var(--fill,0)*100%) 8px, 100% 8px;
+  outline:none;
+  cursor:pointer;
+  transition: none;
+}
+
+/* ручка — чуть «липкая» и плавная */
+#taskCreatorWrapper #prioRange::-webkit-slider-thumb{
+  appearance:none;
+  width:18px; height:18px; border-radius:50%;
+  background:#fff; border:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+  margin-top:-5px;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+#taskCreatorWrapper #prioRange:active::-webkit-slider-thumb{
+  transform: scale(1.12);
+  box-shadow:0 4px 14px rgba(0,0,0,.45);
+}
+
+/* Firefox */
+#taskCreatorWrapper #prioRange::-moz-range-thumb{
+  width:18px; height:18px; border-radius:50%;
+  background:#fff; border:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+#taskCreatorWrapper #prioRange:active::-moz-range-thumb{
+  transform: scale(1.12);
+  box-shadow:0 4px 14px rgba(0,0,0,.45);
+}
+
+#taskCreatorWrapper #prioRange::-webkit-slider-thumb{
+  appearance:none;
+  width:18px; height:18px; border-radius:50%;
+  background:#fff; box-shadow:0 0 0 3px #0003;
+  border:none; margin-top:-5px;
+}
+#taskCreatorWrapper #prioRange::-moz-range-thumb{
+  width:18px; height:18px; border-radius:50%;
+  background:#fff; box-shadow:0 0 0 3px #0003; border:none;
+}
+
+/* подписи-тиКи */
+#taskCreatorWrapper .tc-prio-slider .ticks{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:6px; margin-top:8px; font-size:.86rem; color:#9fb0d3;
+}
+#taskCreatorWrapper .tc-prio-slider .ticks span{
+  text-align:center; user-select:none; cursor:pointer;
+  padding-top:2px; border-top:2px solid #ffffff26;
+  transition:color .2s, border-color .2s, transform .2s;
+}
+#taskCreatorWrapper .tc-prio-slider .ticks span.active{
+  color:#fff; border-color:var(--accent1);
+  transform:translateY(-1px);
+}
+
+
+
+
+
+
+
+
+
+/* ================= Mobile ================= */
+@media (max-width:768px){
+  #taskCreatorWrapper .tc-grid{ grid-template-columns:1fr; }
+  #taskCreatorWrapper .tc-header{ padding:14px 16px; }
+  #taskCreatorWrapper .tc-body{ padding:16px; }
+  #taskCreatorWrapper .tc-footer{ padding:12px 16px 16px; }
 }
