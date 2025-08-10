@@ -21,6 +21,8 @@ require_once 'authcheck.php';
     <link rel="stylesheet" href="assets/dashboard-style.css">
     <link rel="stylesheet" href="assets/task-creator.css">
     <link rel="stylesheet" href="assets/settings.css">
+    <link rel="stylesheet" href="assets/task_list_style.css">
+    
 </head>
 
 <body>
@@ -269,11 +271,28 @@ foreach ($rooms as $room) {
 
 
 
+<style>
+  
+  </style>
+
+
+
 
 
            <div class="tc-overlay" onclick="closeTaskCreator()"></div>
 
+<div id="taskListWrapper" class="tl-wrapper" aria-hidden="true">
+  <div class="tl-overlay" onclick="closeTaskList()"></div>
 
+  <aside class="tl-panel" role="dialog" aria-modal="true" aria-labelledby="tlPanelTitle">
+    <header class="tl-panel__head">
+
+    </header>
+
+    <!-- сюда task_list.js подгрузит task_list_preset.php -->
+    <div id="tasksView"></div>
+  </aside>
+</div>
 
 
             <!-- IVAN-END-AREA -->
@@ -544,6 +563,7 @@ foreach ($rooms as $room) {
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
 
     <script src="assets/task-creator.js"></script>
+     <script src="assets/task_list.js"></script>
 </body>
 
 </html>
