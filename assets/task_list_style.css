@@ -1,0 +1,362 @@
+/* =========================================================
+   TASK LIST (embedded) — task_list_style.css
+   Скрипт рендерит вёрстку в #tasksView → .tasklist-wrap
+   Никаких фиксированных оверлеев — всё внутри блока.
+   Цвета на переменных: можно переопределить снаружи (в тему).
+   ========================================================= */
+
+.tasklist-wrap {
+  /* Тематические переменные с адекватными дефолтами */
+  --bg:            #0b121e;
+  --surface:       #0f1623;
+  --surface-2:     #0d1422;
+  --surface-3:     #101a2b;
+  --border:        #ffffff14;
+  --border-2:      #ffffff1f;
+  --shadow:        rgba(0,0,0,.45);
+  --text:          #e8eef6;
+  --text-dim:      #9fb0d3;
+  --muted:         #8ea3c9;
+
+  --blue:          #4c83ff; /* badge blue / normal prio */
+  --green:         #22c55e; /* in progress */
+  --yellow:        #f5be0b; /* review/done */
+  --gray:          #718096; /* archived */
+  --urgent:        #ff4d6d;
+  --high:          #f59e0b;
+  --normal:        #4c83ff;
+  --low:           #22c55e;
+
+  --neon1:         #2afadf; /* если есть глобальные — переопределятся */
+  --neon2:         #4c83ff;
+
+  --radius-lg:     16px;
+  --radius-md:     12px;
+  --radius-sm:     10px;
+
+  --pad-x:         18px;
+  --pad-y:         14px;
+
+  color: var(--text);
+  background: linear-gradient(180deg, #0b121e, #0a1322);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 36px var(--shadow);
+  overflow: hidden; /* обрезаем края секций */
+}
+
+/* ======================= Верхняя панель (фильтры/заголовок) ======================= */
+.tasklist-wrap .tasklist-filters {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border-bottom: 1px solid var(--border);
+  padding: 14px var(--pad-x);
+  backdrop-filter: blur(4px);
+}
+.tasklist-wrap .tl-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tasklist-wrap .tl-right { display: flex; align-items: center; gap: 8px; }
+
+.tasklist-wrap .tl-room-label {
+  font-weight: 800;
+  letter-spacing: .3px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border-2);
+  color: #fff;
+}
+
+.tasklist-wrap .tl-chip {
+  font-size: .88rem;
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+}
+.tasklist-wrap .tl-chip[hidden] { display: none !important; }
+
+/* ======================= Секция статуса ======================= */
+.tasklist-wrap .tasklist-section {
+  padding: 10px var(--pad-x) 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+}
+.tasklist-wrap .tasklist-section:last-of-type { border-bottom: 0; }
+
+.tasklist-wrap .tls-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0 12px;
+  user-select: none; cursor: pointer;
+}
+.tasklist-wrap .tls-head:hover .tls-badge { box-shadow: 0 0 0 1px #ffffff1f inset; }
+
+.tasklist-wrap .tls-toggle {
+  width: 28px; height: 28px; border: 1px solid var(--border);
+  border-radius: 8px; background: rgba(255,255,255,.04);
+  position: relative; flex: 0 0 28px; cursor: pointer;
+  transition: transform .2s ease, background .15s ease, border-color .15s ease;
+}
+.tasklist-wrap .tls-toggle::before,
+.tasklist-wrap .tls-toggle::after{
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 10px; height: 2px; background: var(--text); border-radius: 2px;
+  transform-origin: center; transition: transform .2s ease;
+}
+.tasklist-wrap .tls-toggle::before{ transform: translate(-50%,-50%) rotate(0); }
+.tasklist-wrap .tls-toggle::after { transform: translate(-50%,-50%) rotate(90deg); }
+.tasklist-wrap .tasklist-section.is-collapsed .tls-toggle::after { transform: translate(-50%,-50%) rotate(0); } /* минус */
+
+.tasklist-wrap .tls-badge {
+  font-weight: 800; letter-spacing: .3px;
+  font-size: .82rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.04);
+  text-transform: uppercase;
+}
+.tasklist-wrap .tls-badge.badge--blue   { color: #e9f1ff; border-color: color-mix(in oklab, var(--blue) 40%, var(--border)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--blue) 15%, transparent) inset; }
+.tasklist-wrap .tls-badge.badge--green  { color: #eafff3; border-color: color-mix(in oklab, var(--green) 40%, var(--border)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--green) 15%, transparent) inset; }
+.tasklist-wrap .tls-badge.badge--yellow { color: #fff6e0; border-color: color-mix(in oklab, var(--yellow) 40%, var(--border)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--yellow) 15%, transparent) inset; }
+.tasklist-wrap .tls-badge.badge--gray   { color: #e6edf7; border-color: color-mix(in oklab, var(--gray) 40%, var(--border)); box-shadow: 0 0 0 1px color-mix(in oklab, var(--gray) 15%, transparent) inset; }
+
+.tasklist-wrap .tls-count {
+  margin-left: 6px;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: .82rem;
+}
+
+/* ======================= Таблица ======================= */
+.tasklist-wrap .tls-table {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, var(--surface-3), var(--surface));
+  overflow: hidden;
+}
+
+.tasklist-wrap .tls-row {
+  display: grid;
+  grid-template-columns:
+    44px            /* check */
+    1.5fr           /* title */
+    1fr             /* action required */
+    150px           /* priority */
+    140px           /* deadline */
+    160px;          /* status */
+  align-items: center;
+  gap: 10px;
+  padding: 10px var(--pad-x);
+  border-top: 1px solid #ffffff0f;
+}
+.tasklist-wrap .tls-row:first-child { border-top: 0; }
+
+.tasklist-wrap .tls-row--head {
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border-bottom: 1px solid var(--border);
+  font-size: .82rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.tasklist-wrap .tls-row--empty {
+  display: block;
+  padding: 20px var(--pad-x);
+  color: var(--text-dim);
+}
+.tasklist-wrap .tls-col--empty { grid-column: 1 / -1; text-align: center; }
+
+.tasklist-wrap .tls-row:not(.tls-row--head):hover {
+  background: rgba(255,255,255,.04);
+}
+
+/* Колонки (доп. выравнивание) */
+.tasklist-wrap .tls-col--check { display: flex; align-items: center; justify-content: center; }
+.tasklist-wrap .tls-col--title { display: grid; gap: 4px; }
+.tasklist-wrap .tls-col--actionreq { color: var(--muted); font-size: .92rem; }
+.tasklist-wrap .tls-col--priority { font-weight: 600; }
+.tasklist-wrap .tls-col--deadline { color: var(--text); font-variant-numeric: tabular-nums; }
+.tasklist-wrap .tls-col--status { text-align: right; }
+
+/* Контент в title */
+.tasklist-wrap .tl-title {
+  font-weight: 800; color: #fff;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.tasklist-wrap .tl-desc {
+  color: var(--text-dim);
+  font-size: .95rem;
+  line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.tasklist-wrap .tl-chip--room {
+  font-size: .76rem; font-weight: 700; letter-spacing: .2px;
+  padding: 3px 7px; border-radius: 8px;
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+/* ======================= Бейджи статуса ======================= */
+.tasklist-wrap .badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 110px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-weight: 800; letter-spacing: .2px; font-size: .86rem;
+  text-transform: uppercase;
+  background: rgba(255,255,255,.04);
+}
+.tasklist-wrap .badge--blue   { color: #cfe2ff; box-shadow: 0 0 0 1px color-mix(in oklab, var(--blue) 15%, transparent) inset; }
+.tasklist-wrap .badge--green  { color: #e6ffef; box-shadow: 0 0 0 1px color-mix(in oklab, var(--green) 15%, transparent) inset; }
+.tasklist-wrap .badge--yellow { color: #fff3cf; box-shadow: 0 0 0 1px color-mix(in oklab, var(--yellow) 15%, transparent) inset; }
+.tasklist-wrap .badge--gray   { color: #e7edf7; box-shadow: 0 0 0 1px color-mix(in oklab, var(--gray) 15%, transparent) inset; }
+
+/* ======================= Приоритет (точки) ======================= */
+.tasklist-wrap .prio-dot {
+  display: inline-block; width: 10px; height: 10px; border-radius: 99px;
+  margin-right: 8px; vertical-align: -1px;
+  box-shadow: 0 0 0 2px #ffffff16 inset, 0 0 0 1px #0003;
+}
+.tasklist-wrap .prio-low    { background: var(--low); }
+.tasklist-wrap .prio-normal { background: var(--normal); }
+.tasklist-wrap .prio-high   { background: var(--high); }
+.tasklist-wrap .prio-urgent { background: var(--urgent); }
+
+/* ======================= Кнопки ======================= */
+.tasklist-wrap .tl-add-btn {
+  border: 1px dashed var(--border);
+  background: rgba(255,255,255,.02);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .12s ease;
+}
+.tasklist-wrap .tl-add-btn:hover {
+  background: rgba(255,255,255,.06);
+  border-color: #ffffff26;
+  transform: translateY(-1px);
+}
+.tasklist-wrap .tls-foot {
+  display: flex; justify-content: flex-start; padding: 12px 0 0;
+}
+
+/* ======================= Чекбоксы (акцентным цветом) ======================= */
+.tasklist-wrap input[type="checkbox"] {
+  accent-color: var(--blue);
+  width: 18px; height: 18px;
+}
+
+/* ======================= Скелетон / лоадер ======================= */
+.tasklist-wrap .tl-loading {
+  padding: 24px;
+  color: var(--text-dim);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255,255,255,.04), rgba(255,255,255,.04) 10px,
+    rgba(255,255,255,.02) 10px, rgba(255,255,255,.02) 20px
+  );
+  animation: tlStripe 1s linear infinite;
+  border-bottom: 1px solid var(--border);
+}
+@keyframes tlStripe { to { background-position: 40px 0; } }
+
+/* ======================= Сворачивание секций ======================= */
+.tasklist-wrap .tasklist-section.is-collapsed .tls-table { display: none; }
+.tasklist-wrap .tasklist-section.is-collapsed .tls-foot  { display: none; }
+.tasklist-wrap .tasklist-section.is-collapsed .tls-count { opacity: .65; }
+
+/* ======================= Сетка: адаптив ======================= */
+@media (max-width: 1200px) {
+  .tasklist-wrap .tls-row {
+    grid-template-columns:
+      40px 1.4fr 0.9fr 130px 120px 140px;
+  }
+}
+@media (max-width: 980px) {
+  /* Превращаем строки в «карточки» */
+  .tasklist-wrap .tls-row {
+    grid-template-columns: 40px 1fr 120px;
+    grid-template-areas:
+      "check title  status"
+      "check action status"
+      "check prio   deadline";
+    gap: 8px 12px;
+  }
+  .tasklist-wrap .tls-row.tls-row--head {
+    display: none; /* заголовок-строка не нужен на мобилке */
+  }
+  .tasklist-wrap .tls-col--check     { grid-area: check; justify-content: flex-start; }
+  .tasklist-wrap .tls-col--title     { grid-area: title; }
+  .tasklist-wrap .tls-col--actionreq { grid-area: action; }
+  .tasklist-wrap .tls-col--priority  { grid-area: prio; }
+  .tasklist-wrap .tls-col--deadline  { grid-area: deadline; }
+  .tasklist-wrap .tls-col--status    { grid-area: status; text-align: right; }
+  .tasklist-wrap .badge { min-width: 0; padding: 6px 10px; font-size: .8rem; }
+  .tasklist-wrap .tl-desc { -webkit-line-clamp: 3; }
+}
+@media (max-width: 640px) {
+  .tasklist-wrap { border-radius: 12px; }
+  .tasklist-wrap .tasklist-filters { padding: 12px var(--pad-x); }
+  .tasklist-wrap .tasklist-section { padding: 8px var(--pad-x) 16px; }
+  .tasklist-wrap .tl-room-label { padding: 6px 10px; }
+  .tasklist-wrap .tl-chip { padding: 5px 9px; }
+}
+
+/* ======================= Мелочи / утилиты ======================= */
+.tasklist-wrap .tl-muted { color: var(--muted); }
+.tasklist-wrap .tls-table::-webkit-scrollbar{ height: 10px; width: 10px; }
+.tasklist-wrap .tls-table::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg,#ffffff1b,#ffffff10);
+  border-radius: 10px; border: 1px solid var(--border);
+}
+
+/* защита от «протекания» внешних таблиц/кнопок */
+.tasklist-wrap * { box-sizing: border-box; }
+
+
+
+/* ====== compact font tweaks v2 (a bit smaller) ====== */
+.tasklist-wrap { font-size: 0.90rem; }  /* было 0.94rem */
+
+.tasklist-wrap .tl-room-label { font-size: .94rem; }
+.tasklist-wrap .tl-chip       { font-size: .80rem; }
+.tasklist-wrap .tls-badge     { font-size: .76rem; }
+.tasklist-wrap .tls-count     { font-size: .76rem; }
+
+.tasklist-wrap .tls-row--head { font-size: .76rem; }
+.tasklist-wrap .tl-title      { font-size: .96em; line-height: 1.22; }
+.tasklist-wrap .tl-desc       { font-size: .86rem; line-height: 1.28; }
+
+.tasklist-wrap .badge         { font-size: .78rem; }
+.tasklist-wrap .tls-col--actionreq { font-size: .88rem; }
+
+/* чуть плотнее на узких экранах */
+@media (max-width: 980px){
+  .tasklist-wrap { font-size: 0.88rem; }
+  .tasklist-wrap .badge { font-size: .76rem; }
+  .tasklist-wrap .tl-desc { font-size: .84rem; }
+}
+
+/* (опционально) если захочешь ещё на волос тоньше — раскомментируй:
+.tasklist-wrap .tls-row { padding: 8px var(--pad-x); }
+*/
+/* Исполнитель: аватар/инициалы */
+.tasklist-wrap .tls-col--assignee { display:flex; align-items:center; gap:10px; }
+.tasklist-wrap .assignee { display:inline-flex; align-items:center; gap:8px; max-width:100%; }
+.tasklist-wrap .assignee-ava {width: 24px;height: 24px;background: linear-gradient(135deg, var(--neon1), var(--neon2));padding: 4px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px #0003;}
+.tasklist-wrap .assignee-ava.gen{
+  display:inline-flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:.78rem; color:#0b121e;
+  background: linear-gradient(135deg, var(--neon1), var(--neon2));
+}
+.tasklist-wrap .assignee .name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
