@@ -56,8 +56,12 @@ function loadUsers() {
                     <td>${user.true_name}</td>
                     <td>${user.posada}</td>
                     <td>
-                        <button class="btn btn-primary" onclick="editUser(${user.id})">Редагувати</button>
-                        <button class="btn btn-danger" onclick="deleteUser(${user.id})">Видалити</button>
+             <button class="btn btn-primary" onclick="editUser(${user.id})">
+  <i class="fas fa-pencil-alt"></i>
+</button>
+<button class="btn btn-danger" onclick="deleteUser(${user.id})">
+  <i class="fas fa-trash-alt"></i>
+</button>
                     </td>
                 `;
                 tableBody.appendChild(row);  // Додаємо кожного користувача в таблицю

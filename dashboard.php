@@ -293,66 +293,134 @@ foreach ($rooms as $room) {
             <!-- IVAN-END-AREA -->
             <!-- DIMA-AREA -->
 
+<div style="z-index:66; position:relative;" class="users-management" id="users_manager">
+  <!-- фоновые акценты -->
+  <div class="trbls_dv" id="trbls_dv_id" aria-hidden="true">
+    <div class="um-bg-blob um-bg-blob--one"></div>
+    <div class="um-bg-blob um-bg-blob--two"></div>
+    <div class="um-bg-grid"></div>
+  </div>
 
+  <!-- шапка секции -->
+  <div class="um-header">
+    <div class="um-header__titles">
+      <h2 class="um-title">Управление пользователями</h2>
+      <p class="um-subtitle">Создавай, редактируй и контролируй доступ — быстро и красиво.</p>
+    </div>
+    <div class="um-actions">
+      <button type="button" class="btn btn-secondary um-ghost" onclick="loadUsers()">
+        <span class="um-icn" aria-hidden="true">⟳</span> Обновить
+      </button>
+    </div>
+  </div>
 
-            <div style="z-index: 66; position: relative;" class="users-management" id="users_manager">
-                <!-- Форма додавання користувача -->
-                <form id="createUserForm" method="POST">
-                    <div class="form-group">
-                        <label>Логин:</label>
-                        <input type="text" name="username" required>
-                    </div>
+  <!-- зона тостов -->
+  <div id="createUserMessage" class="um-toast" role="status" aria-live="polite"></div>
 
-                    <div class="form-group">
-                        <label>Пароль:</label>
-                        <input type="password" name="password" required>
-                    </div>
+  <!-- сетка: форма + таблица -->
+  <div class="um-grid">
+    <!-- Форма добавления -->
+    <div class="create-user-form um-card">
+      <h3>Добавить пользователя</h3>
 
-                    <div class="form-group">
-                        <label>Роль:</label>
-                        <select name="role" required>
-                            <option value="user">Пользователь</option>
-                            <option value="admin">Админ</option>
-                        </select>
-                    </div>
+      <form id="createUserForm" method="POST" autocomplete="off">
+        <div class="form-group um-field">
+          <label>Логин:</label>
+          <div class="um-inputwrap">
+            <span class="um-icn" aria-hidden="true">👤</span>
+            <input type="text" autocomplete="off" name="username" required>
+            <input style="display:none" aria-hidden="true" type="password" name="fakepass" autocomplete="current-password">
+          </div>
+        </div>
 
+        <div class="form-group um-field">
+          <label>Пароль:</label>
+          <div class="um-inputwrap">
+            <span class="um-icn" aria-hidden="true">🔒</span>
+            <input type="password" autocomplete="off" name="password" required>
+            <input style="display:none" aria-hidden="true" type="text" name="fakeuser" autocomplete="username">
+          </div>
+        </div>
 
+        <div class="form-group um-field">
+          <label>Роль:</label>
+          <div class="um-inputwrap">
+            <span class="um-icn" aria-hidden="true">⚙️</span>
+            <select name="role" required>
+              <option value="user">Пользователь</option>
+              <option value="admin">Админ</option>
+            </select>
+          </div>
+        </div>
 
-                    <button type="submit" name="create_user" class="btn btn-primary">Добавить пользователя</button>
-                </form>
+        <button type="submit" name="create_user" class="btn btn-primary um-primary">
+          Создать
+        </button>
+      </form>
+    </div>
 
+    <!-- Таблица пользователей -->
+    <div class="users-list um-card">
+      <div class="um-list-head">
+        <h3>Список пользователей</h3>
+      </div>
+      <div class="um-table-wrap">
+        <table id="users_table" class="um-table">
+          <thead>
+            <tr>
+              <th style="width:72px;">ID</th>
+              <th>Логин</th>
+              <th>Роль</th>
+              <th>Аватар</th>
+              <th>Телеграм</th>
+              <th>Имя</th>
+              <th>Должность</th>
+              <th style="min-width:180px;">Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- строки добавляет JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- Модалка редактирования (ID/поля сохранены для твоего JS) -->
+<div class="moduser_modal" id="editUserModal" aria-hidden="true">
+  <div class="moduser_modal-content um-card um-card--modal" role="dialog" aria-modal="true" aria-labelledby="moduser_title">
+    <button class="moduser_close-button" id="closeModal" aria-label="Закрыть">×</button>
+    <h3 class="moduser_title" id="moduser_title">Редактировать пользователя</h3>
 
+    <label class="um-label" for="editUsername">Логин</label>
+    <input class="moduser_input" id="editUsername" type="text" placeholder="Логин">
 
+    <label class="um-label" for="editRole">Роль</label>
+    <select class="moduser_select" id="editRole">
+      <option value="user">Пользователь</option>
+      <option value="admin">Админ</option>
+    </select>
 
+    <label class="um-label" for="editPassword">Новый пароль (необязательно)</label>
+    <input class="moduser_input" id="editPassword" type="password" placeholder="Оставь пустым, если без изменения">
 
+    <label class="um-label" for="editTelegram">Телеграм</label>
+    <input class="moduser_input" id="editTelegram" type="text" placeholder="@nickname">
 
+    <label class="um-label" for="editTrueName">Имя</label>
+    <input class="moduser_input" id="editTrueName" type="text" placeholder="Имя пользователя">
 
+    <label class="um-label" for="editPosada">Должность</label>
+    <input class="moduser_input" id="editPosada" type="text" placeholder="Должность">
 
+    <div class="moduser_modal-buttons">
+      <button class="moduser_btn moduser_cancel" id="cancelUserBtn" type="button">Отмена</button>
+      <button class="moduser_btn moduser_save" id="saveUserBtn" type="button">Сохранить</button>
+    </div>
+  </div>
+</div>
 
-
-                <!-- Список користувачів -->
-                <div class="users-list">
-                    <h3>Список пользователей</h3>
-                    <table id="users_table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Логин</th>
-                                <th>Роль</th>
-                                <th>Аватар</th>
-                                <th>Телеграм</th>
-                                <th>Имя</th>
-                                <th>Должность</th>
-                                <th>Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Користувачі будуть додаватися сюди через JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
 <section class="usr_stngs_section" id="stngs_sect">
   <!-- ——— LEFT ——— -->
