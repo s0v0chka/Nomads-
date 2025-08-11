@@ -24,6 +24,8 @@ require_once 'authcheck.php';
     <link rel="stylesheet" href="assets/task_list_style.css">
     <link rel="stylesheet" href="assets/task_viewer.css">
     
+            <link rel="stylesheet" href="dstyle.css">
+    
 </head>
 
 <body>
@@ -271,11 +273,12 @@ foreach ($rooms as $room) {
 
 
 
-
-<style>
-  
-  </style>
-
+<!-- Контейнер пошуку (з’являється зліва від кнопки) -->
+<div id="searchBox" style="width: 62vw; height: 44vw;" class="search-container">
+  <i class="fas fa-search search-icon"></i>
+  <input type="text" placeholder="Пошук..." class="search-input" id="liveSearch">
+  <div id="suggestions" style="background-color: black; color: white;" class="suggestions" style="display:none;"></div>
+</div>     
 
 
 
@@ -543,8 +546,7 @@ foreach ($rooms as $room) {
   </div>
 </section>
 
-            <link rel="stylesheet" href="dstyle.css">
-            <script src="dscript.js"></script>
+            
 
             <!-- DIMA-END-AREA -->
             <div class="content__placeholder">
@@ -567,6 +569,7 @@ foreach ($rooms as $room) {
      <script src="assets/task_list.js"></script>
      <script src="assets/task_viewer.js" defer></script>
      <script src="assets/task_viewer_comments.js?v=1"></script>
+     <script src="dscript.js"></script>
 </body>
 
 </html>

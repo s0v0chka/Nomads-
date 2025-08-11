@@ -314,3 +314,74 @@
   background: linear-gradient(180deg, rgba(42,250,223,.5), rgba(76,131,255,.5));
   border-radius: 10px; border: 2px solid rgba(14,20,36,.8);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+.search-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  display: none;
+      position: relative;
+  transition: width 0.4s ease;
+  vertical-align: middle;
+}
+
+.search-container.active {
+  width: 200px; /* ширина поля при відкритті */
+}
+
+.search-icon {
+  position: absolute;
+  left: 8px;
+  color: #888;
+  pointer-events: none; /* щоб іконка була неклікабельною */
+}
+
+.search-input {
+  width: 100%;
+  padding: 6px 8px 6px 28px; /* відступ для іконки */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+
+
+.suggestions {
+  background-color: black;
+    color: white;
+    display: none;
+    margin-top: 20vw;
+    width: 44vw;
+  border: 1px solid #ccc;
+  background: white;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 1000;
+}
+.suggestions div {
+  padding: 6px;
+  cursor: pointer;
+}
+.suggestions div:hover {
+  background: #eee;
+}
+
+
+
+
+
+
+
