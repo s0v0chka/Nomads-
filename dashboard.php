@@ -206,8 +206,7 @@ foreach ($rooms as $room) {
 
                     <div class="modal-group">
                         <label>Цвет комнаты:</label>
-                        <div class="color-picker-wrap">
-                            <div id="colorDisplay" class="color-display"></div>
+                        
                             <input type="color" id="roomColor" name="color" value="#ff3b3b">
                         </div>
                     </div>
