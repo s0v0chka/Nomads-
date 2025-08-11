@@ -332,8 +332,44 @@ document.getElementById('genpass').addEventListener('click', function () {
 
 
 
+// При кліку на кнопку — відкриваємо / закриваємо поле
+// Показ/сховати search-box
+$('#search').on('click', function () {
+    let box = $('#searchBox');
+    if (box.css('display') === 'none') {
+        box.css('display', 'flex');
+    } else {
+        box.css('display', 'none');
+    }
+});
 
+// Live search
+$('#liveSearch').on('input', function () {
+    let query = $(this).val().trim();
+    let suggestionsBox = $('#suggestions');
 
+    if (query.length < 2) {
+        suggestionsBox.hide();
+        return;
+    }
 
+    $.ajax({
+        url: 'search_tasks.php',
+        type: 'GET',
+        data: { q: query },
+        dataType: 'json',
+        success: function (data) {
+            if (data.length > 0) {
+                let html = data.map(item => `<div>${item.id} ${item.title}</div>`).join('');
+                suggestionsBox.html(html).show();
+            } else {
+                suggestionsBox.html('<div>Нічого не знайдено</div>').show();
+            }
+        },
+        error: function (err) {
+            console.error(err);
+        }
+    });
+});
 
 

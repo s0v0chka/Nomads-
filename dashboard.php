@@ -123,10 +123,24 @@ foreach ($rooms as $room) {
             </div>
 
             <div class="topbar__right">
-                <button class="icon-btn" title="Поиск"><i class="fas fa-search"></i></button>
+                <button class="icon-btn" title="Поиск" id="search"><i class="fas fa-search"></i></button>
                 <button class="icon-btn" title="Уведомления"><i class="fas fa-bell"></i></button>
             </div>
         </header>
+
+
+       <!-- Кнопка -->
+
+
+<!-- Контейнер пошуку (з’являється зліва від кнопки) -->
+<div id="searchBox" style="width: 62vw; height: 44vw;" class="search-container">
+  <i class="fas fa-search search-icon"></i>
+  <input type="text" placeholder="Пошук..." class="search-input" id="liveSearch">
+  <div id="suggestions" style="background-color: black; color: white;" class="suggestions" style="display:none;"></div>
+</div>     
+
+
+
 
         <!-- Модальне вікно -->
         <div id="editUserModal" class="moduser_modal">
@@ -161,6 +175,14 @@ foreach ($rooms as $room) {
         <div class="trbls_dv" id="trbls_dv_id">
             <div id="createUserMessage" class="createUserMessageclass"></div>
         </div>
+
+
+
+
+
+
+
+
 
 
 
