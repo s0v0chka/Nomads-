@@ -22,6 +22,7 @@ require_once 'authcheck.php';
     <link rel="stylesheet" href="assets/task-creator.css">
     <link rel="stylesheet" href="assets/settings.css">
     <link rel="stylesheet" href="assets/task_list_style.css">
+    <link rel="stylesheet" href="assets/task_viewer.css">
     
 </head>
 
@@ -564,6 +565,8 @@ foreach ($rooms as $room) {
 
     <script src="assets/task-creator.js"></script>
      <script src="assets/task_list.js"></script>
+     <script src="assets/task_viewer.js" defer></script>
+     <script src="assets/task_viewer_comments.js?v=1"></script>
 </body>
 
 </html>

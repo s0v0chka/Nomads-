@@ -159,18 +159,20 @@ $priority    = $prioMap[$priorityIdx];
 
     // 1) сначала вставляем задачу (имена КОЛОНОК как в твоей БД!)
     $filesJson = json_encode([], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
-    $ins = $pdo->prepare("
-        INSERT INTO tasks
-          (room_id, title, description, status, priority, created_at, updated_at,
-           assignee_id, created_by, start_date, due_date, files)
-        VALUES
-          (:room_id, :title, :description, 'open', :priority, NOW(), NOW(),
-           :assignee_id, :created_by, :start_date, :due_date, :files)
-    ");
+    $status = 'new'; 
+$ins = $pdo->prepare("
+    INSERT INTO tasks
+      (room_id, title, description, status, priority, created_at, updated_at,
+       assignee_id, created_by, start_date, due_date, files)
+    VALUES
+      (:room_id, :title, :description, :status, :priority, NOW(), NOW(),
+       :assignee_id, :created_by, :start_date, :due_date, :files)
+");
     $ins->execute([
         ':room_id'     => $roomId,
         ':title'       => $title,
         ':description' => $description,
+        ':status'      => $status,  
         ':priority'    => $priority,
         ':assignee_id' => $assigneeId ?: null,
         ':created_by'  => $_SESSION['user_id'],
