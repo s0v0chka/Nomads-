@@ -16,6 +16,10 @@ $userId     = (int)$_SESSION['user_id'];
 $search     = trim($_GET['search'] ?? '');
 $assigneeId = isset($_GET['assignee_id']) ? (int)$_GET['assignee_id'] : null;
 $priority   = $_GET['priority'] ?? null; // low|normal|high|urgent|null
+$roomId = isset($_GET['room_id']) ? (int)$_GET['room_id'] : null;
+
+
+
 
 // === Задачи только из комнат пользователя ===
 $where  = ["t.room_id IN (SELECT ru.room_id FROM room_users ru WHERE ru.user_id = ?)"];
@@ -34,7 +38,10 @@ if (in_array($priority, ['low','normal','high','urgent'], true)) {
     $where[] = "t.priority = ?";
     $params[] = $priority;
 }
-
+if ($roomId) {
+    $where[] = "t.room_id = ?";
+    $params[] = $roomId;
+}
 /*
  * Нормализуем статус:
  *  - если NULL или пустая строка -> 'new'
@@ -72,10 +79,15 @@ $sql = "
     t.created_by,
     t.start_date,
     t.due_date,
+
     u.true_name AS assignee_name,
-    u.avatar    AS assignee_avatar_raw
+    u.avatar    AS assignee_avatar_raw,
+
+    r.name  AS room_name,     -- ⬅️ добавили
+    r.color AS room_color     -- ⬅️ добавили
   FROM tasks t
   LEFT JOIN users u ON u.id = t.assignee_id
+  LEFT JOIN rooms r ON r.id = t.room_id      -- ⬅️ добавили
   WHERE " . implode(' AND ', $where) . "
   ORDER BY
     FIELD(status_norm,'new','in_progress','done','archived'),
@@ -99,22 +111,24 @@ try {
 $groups = ['new'=>[], 'in_progress'=>[], 'done'=>[], 'archived'=>[]];
 foreach ($rows as $r) {
     $status = $r['status_norm'] ?? 'new';
-    $groups[$status][] = [
-        'id'          => (int)$r['id'],
-        'room_id'     => (int)$r['room_id'],
-        'title'       => $r['title'],
-        'description' => $r['description'],
-        'status'      => $status,
-        'priority'    => $r['priority'],
-        'created_at'  => $r['created_at'],
-        'updated_at'  => $r['updated_at'],
-        'assignee_id' => isset($r['assignee_id']) ? (int)$r['assignee_id'] : null,
-        'created_by'  => (int)$r['created_by'],
-        'start_date'  => $r['start_date'],
-        'due_date'    => $r['due_date'],
-        'assignee_name'   => $r['assignee_name'] ?? null,
-        'assignee_avatar' => buildAvatarUrl($r['assignee_avatar_raw'] ?? null, $AVATAR_BASE),
-    ];
+   $groups[$status][] = [
+    'id'          => (int)$r['id'],
+    'room_id'     => (int)$r['room_id'],
+    'room_name'   => $r['room_name'] ?? null,   // ⬅️
+    'room_color'  => $r['room_color'] ?? null,  // ⬅️
+    'title'       => $r['title'],
+    'description' => $r['description'],
+    'status'      => $status,
+    'priority'    => $r['priority'],
+    'created_at'  => $r['created_at'],
+    'updated_at'  => $r['updated_at'],
+    'assignee_id' => isset($r['assignee_id']) ? (int)$r['assignee_id'] : null,
+    'created_by'  => (int)$r['created_by'],
+    'start_date'  => $r['start_date'],
+    'due_date'    => $r['due_date'],
+    'assignee_name'   => $r['assignee_name'] ?? null,
+    'assignee_avatar' => buildAvatarUrl($r['assignee_avatar_raw'] ?? null, $AVATAR_BASE),
+];
 }
 
 echo json_encode([

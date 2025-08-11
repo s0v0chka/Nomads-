@@ -2,13 +2,14 @@
 <div class="tasklist-wrap" id="tasklistWrap" aria-live="polite">
   <!-- Верхняя панель -->
   <div class="tasklist-filters">
-    <div class="tl-left">
-      <strong class="tl-room-label">Все мои комнаты</strong>
-      <span class="tl-chip tl-chip--search" hidden></span>
-      <span class="tl-chip tl-chip--assignee" hidden></span>
-      <span class="tl-chip tl-chip--priority" hidden></span>
-    </div>
-    <div class="tl-right"></div>
+            <div class="tl-left">
+            <strong class="tl-room-label">Все мои комнаты</strong>
+            <button class="tl-clear-room" type="button" title="Сбросить фильтр" aria-label="Сбросить" hidden>×</button>
+            <span class="tl-chip tl-chip--search" hidden></span>
+            <span class="tl-chip tl-chip--assignee" hidden></span>
+            <span class="tl-chip tl-chip--priority" hidden></span>
+            </div>
+                <div class="tl-right"></div>
   </div>
 
   <!-- НЕ НАЧАТЫ -->
@@ -20,7 +21,7 @@
     </header>
     <div class="tls-table">
       <div class="tls-row tls-row--head">
-        <div class="tls-col tls-col--check"><input type="checkbox" class="tl-check-all" aria-label="Выбрать все"></div>
+        <div class="tls-col tls-col--check"><span class="tl-col-label">Готово</span></div>
         <div class="tls-col tls-col--title">ЗАДАЧА</div>
         <div class="tls-col tls-col--assignee">ИСПОЛНИТЕЛЬ</div>
         <div class="tls-col tls-col--priority">ПРИОРИТЕТ</div>
@@ -43,7 +44,7 @@
     </header>
     <div class="tls-table">
       <div class="tls-row tls-row--head">
-        <div class="tls-col tls-col--check"><input type="checkbox" class="tl-check-all" aria-label="Выбрать все"></div>
+        <div class="tls-col tls-col--check"><span class="tl-col-label">Готово</span></div>
         <div class="tls-col tls-col--title">ЗАДАЧА</div>
         <div class="tls-col tls-col--assignee">ИСПОЛНИТЕЛЬ</div>
         <div class="tls-col tls-col--priority">ПРИОРИТЕТ</div>
@@ -66,7 +67,7 @@
     </header>
     <div class="tls-table">
       <div class="tls-row tls-row--head">
-        <div class="tls-col tls-col--check"><input type="checkbox" class="tl-check-all" aria-label="Выбрать все"></div>
+        <div class="tls-col tls-col--check"><span class="tl-col-label">Готово</span></div>
         <div class="tls-col tls-col--title">ЗАДАЧА</div>
         <div class="tls-col tls-col--assignee">ИСПОЛНИТЕЛЬ</div>
         <div class="tls-col tls-col--priority">ПРИОРИТЕТ</div>
@@ -89,7 +90,7 @@
     </header>
     <div class="tls-table">
       <div class="tls-row tls-row--head">
-        <div class="tls-col tls-col--check"><input type="checkbox" class="tl-check-all" aria-label="Выбрать все"></div>
+        <div class="tls-col tls-col--check"><span class="tl-col-label">Готово</span></div>
         <div class="tls-col tls-col--title">ЗАДАЧА</div>
         <div class="tls-col tls-col--assignee">ИСПОЛНИТЕЛЬ</div>
         <div class="tls-col tls-col--priority">ПРИОРИТЕТ</div>
