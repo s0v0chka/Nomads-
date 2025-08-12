@@ -126,7 +126,7 @@ foreach ($rooms as $room) {
             </div>
 
             <div class="topbar__right">
-                <button class="icon-btn" title="Поиск"><i class="fas fa-search"></i></button>
+                <button class="icon-btn" id="search" title="Поиск"><i class="fas fa-search"></i></button>
                 <button class="icon-btn" title="Уведомления"><i class="fas fa-bell"></i></button>
             </div>
         </header>
